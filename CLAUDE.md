@@ -78,6 +78,7 @@ YNAI5-SU/
 - `/remember [preference]` — save preference to memory/preferences.md
 - `/market-check [ticker(s)]` — price + news + sentiment → crypto-monitoring/research/
 - `/project-update [name]` — update project README status
+- `/voice-gen [text]` — ElevenLabs TTS → MP3 saved to projects/social-media-automation/audio/
 
 ## Key Imports
 @context/profile.md
