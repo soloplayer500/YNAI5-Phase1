@@ -163,7 +163,7 @@ def main():
     size_kb = len(audio_bytes) / 1024
     char_count = len(args.text)
 
-    print(f"\n✅ Voiceover saved!")
+    print(f"\n[DONE] Voiceover saved!")
     print(f"  File    : {out_path}")
     print(f"  Size    : {size_kb:.1f} KB")
     print(f"  Chars   : {char_count}")
