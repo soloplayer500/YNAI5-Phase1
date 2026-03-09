@@ -10,7 +10,9 @@ Build personal AI infrastructure integrating learning, decision-making, finance,
 automation, and creative output. Treat AI tools as modular collaborators.
 
 ## #1 Priority
-[UPDATE THIS — change whenever your focus shifts]
+AI-powered social media automation for revenue — build the YouTube/TikTok/Instagram
+content generation pipeline. Niche finder → content ideas → production → upload.
+First revenue milestone before anything else.
 
 ## Thinking Style
 - Systems thinker — breaks everything into nodes, modules, architectures
