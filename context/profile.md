@@ -51,3 +51,7 @@ First revenue milestone before anything else.
 - Budget-sensitive for API usage — consider cost efficiency
 - Managing multiple technical domains simultaneously
 - Aruba-based — some tools may have regional limitations
+- **Hardware:** HP Laptop 15, AMD Ryzen 5 5500U, 8GB RAM, integrated Radeon Vega 7 GPU only
+- **No local AI video generation** — cloud-only video pipeline (Sora primary, Kling/Seedance backup)
+- **ComfyUI via Pinokio** is usable for CPU-based image generation (slow but functional)
+- **RAM limit:** 8GB — close heavy apps when running local tools

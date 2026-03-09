@@ -96,8 +96,13 @@ Idea (content-tracker.md)
 ## Tools Being Used / Planned
 | Tool | Purpose | Status |
 |------|---------|--------|
+| Claude | Niche research, scripts, captions, tracker | Active |
 | Suno | AI music generation | Active |
-| Claude | Niche research, scripts, captions | Active |
+| ElevenLabs | AI voiceover (TTS) | Active — free 10K credits/month |
+| ChatGPT Sora | AI video generation (PRIMARY) | Active — included in Pro |
+| Kling 2.6 | AI video generation (backup) | Active — free daily credits |
+| Seedance 2.0 | AI video generation (backup) | Active — free daily credits |
+| CapCut | Video assembly + captions | Active — free |
+| ComfyUI (Pinokio) | Image generation (CPU-based) | Installed — slow but usable |
 | Distrokid | Music distribution to YouTube | Planned (pending purchase) |
-| [AI video tool] | Short video generation | Research needed |
-| [Scheduler] | Auto-posting | Research needed |
+| Buffer / Later | Auto-posting scheduler | Research needed |

@@ -17,6 +17,29 @@ due to API restrictions. Pinokio is your secret weapon: free unlimited local vid
 
 ---
 
+## ⚠️ Hardware Note — Integrated GPU Only (Updated 2026-03-09)
+
+**Machine:** HP Laptop 15, AMD Ryzen 5 5500U — integrated Radeon Vega 7 graphics only
+**VRAM:** ~512MB shared system RAM
+**Impact:** Local AI video generation (Wan2.1, Wan2GP, Flux video) is NOT viable on this hardware.
+All video generation models require 6–8GB+ dedicated VRAM minimum.
+
+**What still works locally via Pinokio:**
+- ComfyUI — Stable Diffusion image generation (CPU mode — slow, usable for stills)
+- Text/audio tools — ElevenLabs script, any CPU-based tools
+
+**Full pivot to cloud video — already have all the tools needed:**
+| Tool | Quality | Cost | Access |
+|------|---------|------|--------|
+| **ChatGPT Sora** | Excellent | Included in Pro | ChatGPT.com — PRIMARY |
+| **Kling 2.6** | Very High | Free daily credits | kling.kuaishou.com |
+| **Seedance 2.0** | Very High | Free daily credits | seedance.ai |
+| **Hailuo 2.3** | High | Free trial | hailuoai.com |
+| **InVideoAI** | Good | Free tier | invideo.io |
+| **Runway Gen-4** | High | 125 free credits | runwayml.com |
+
+---
+
 ## Your Current Stack vs What's Needed
 
 | You Have | Role in Pipeline | Cost |
@@ -32,15 +55,18 @@ due to API restrictions. Pinokio is your secret weapon: free unlimited local vid
 
 ## Full TikTok Production Stack
 
-### 🎬 Video Generation (Pick 1 to start)
+### 🎬 Video Generation (Cloud-Only — Integrated GPU Hardware)
 | Tool | Type | Quality | Cost | Verdict |
 |------|------|---------|------|---------|
-| **Pinokio + Wan2.1** | Local, text-to-video | High | FREE (unlimited) | ✅ Best for zero cost |
-| **Pinokio + ComfyUI** | Local, image+video | Very High | FREE (unlimited) | ✅ Most powerful |
-| **ChatGPT Pro (Sora)** | Cloud, text-to-video | Excellent | Included (limited) | Use for hero content |
-| InVideoAI | Cloud, prompt-to-TikTok | Good | Free tier | ✅ Fastest pipeline |
-| Magic Hour | Cloud, text-to-video | Good | Free trial | Backup option |
+| **ChatGPT Sora** | Cloud, text-to-video | Excellent | Included in Pro | ✅ PRIMARY — best quality |
+| **Kling 2.6** | Cloud, text-to-video | Very High | Free daily credits | ✅ Best free backup |
+| **Seedance 2.0** | Cloud, text-to-video | Very High | Free daily credits | ✅ Extra volume |
+| Hailuo 2.3 | Cloud, character video | High | Free trial | Character animation |
+| InVideoAI | Cloud, prompt-to-TikTok | Good | Free tier | Fastest full pipeline |
+| Runway Gen-4 | Cloud, text-to-video | High | 125 free credits | Artistic/stylized |
 | CapCut AI | Cloud, editing + AI | Good | FREE | ✅ Best for assembly |
+| ~~Pinokio + Wan2.1~~ | ~~Local~~ | ~~High~~ | ~~FREE~~ | ❌ Requires 8GB VRAM |
+| ~~Pinokio + Wan2GP~~ | ~~Local~~ | ~~High~~ | ~~FREE~~ | ❌ Requires 6GB VRAM |
 
 ### 🖼️ Image Generation
 | Tool | Cost | Notes |

@@ -13,5 +13,8 @@
 Thumbs.db
 desktop.ini
 
+# Audio output (generated files — don't commit MP3s)
+projects/social-media-automation/audio/*.mp3
+
 # Keep folder structure in git
 !**/.gitkeep
