@@ -18,6 +18,7 @@ _Auto-added by /research skill as YYYY-MM-DD-topic.md_
 |------|-------|------|
 | 2026-03-09 | AI content niche 2026 — TikTok/YouTube faceless automation | 2026-03-09-ai-content-niche-tiktok-youtube.md |
 | 2026-03-09 | TikTok AI tool stack + full automation pipeline | 2026-03-09-tiktok-tool-stack-automation.md |
+| 2026-03-09 | AI prompt engineering — video & image generation 2026 | 2026-03-09-ai-prompt-engineering-video-images.md |
 
 ## Reference Files
 _Stable reference material added as needed_
