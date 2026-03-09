@@ -79,6 +79,7 @@ YNAI5-SU/
 - `/market-check [ticker(s)]` — price + news + sentiment → crypto-monitoring/research/
 - `/project-update [name]` — update project README status
 - `/voice-gen [text]` — ElevenLabs TTS → MP3 saved to projects/social-media-automation/audio/
+- `/prompt-gen [platform] [type] [subject] [style]` — structured 8-layer AI video/image prompt generation
 
 ## Key Imports
 @context/profile.md
