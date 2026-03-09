@@ -1,0 +1,17 @@
+# Claude local settings (personal, not shared)
+.claude/settings.local.json
+.claude/.credentials*
+
+# Environment and secrets
+*.env
+.env.local
+*.key
+*.secret
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Keep folder structure in git
+!**/.gitkeep
