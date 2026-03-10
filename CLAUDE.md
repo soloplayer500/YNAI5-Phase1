@@ -35,6 +35,11 @@ YNAI5-SU/
 ├── playbooks/                             ← Repeatable workflows
 ├── notes/                                 ← Scratch, ideas
 ├── actions/                               ← Open TODO items
+├── assets/
+│   └── ynai-world/                        ← YNAI World visual asset library
+│       ├── characters/protagonist/        ← Main character refs + CHARACTER-BIBLE.md
+│       ├── environments/                  ← World locations
+│       └── brand/                         ← Logos, overlays
 └── projects/
     ├── README.md                          ← Project index
     ├── psychecore/                        ← Modular AI reasoning framework
