@@ -84,6 +84,33 @@ WATCHLIST = {
         ],
         "note": "Restaking protocol. Avg buy $0.30."
     },
+    "pudgy-penguins": {
+        "symbol": "PENGU",
+        "alerts": [
+            (0.003, "DOWN - Critical support, review exit"),
+            (0.015, "UP   - 2x recovery signal"),
+            (0.040, "UP   - Strong recovery toward ATH"),
+        ],
+        "note": "Kraken: 1,873 tokens. Meme/NFT token. ATH ~$0.07."
+    },
+    "bitcoin-cash": {
+        "symbol": "BCH",
+        "alerts": [
+            (250,   "DOWN - Major support test"),
+            (450,   "UP   - Recovery signal, re-evaluate"),
+            (600,   "UP   - Resistance zone, consider exit"),
+        ],
+        "note": "Revolut: 0.01896 BCH. Secondary BTC fork."
+    },
+    "babylon": {
+        "symbol": "BABY",
+        "alerts": [
+            (0.008, "DOWN - Critical support"),
+            (0.025, "UP   - Back at avg buy zone ($0.028)"),
+            (0.050, "UP   - Strong recovery signal"),
+        ],
+        "note": "Kraken: 0.00308 BABY. BTC staking protocol. Avg buy $0.028."
+    },
 }
 
 # ── CoinGecko API ───────────────────────────────────────────────────────────────
@@ -136,15 +163,41 @@ def format_change(change: float) -> str:
     return f"{sign}{change:.2f}%"
 
 
+def big_move_flag(change: float) -> str:
+    """Return a warning label if 24h change is unusually large."""
+    abs_change = abs(change)
+    if abs_change >= 15:
+        return " !! EXTREME MOVE"
+    elif abs_change >= 8:
+        return " !  BIG MOVE"
+    return ""
+
+
+def log_results(lines: list):
+    """Append run output to a daily log file."""
+    log_dir = Path(__file__).resolve().parent / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / f"alerts-{datetime.now().strftime('%Y-%m-%d')}.log"
+    with log_file.open("a", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
 # ── Main ────────────────────────────────────────────────────────────────────────
 
 def main():
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     api_mode = "Demo key (30 req/min)" if COINGECKO_API_KEY else "Free tier (no key)"
-    print(f"\n{'='*60}")
-    print(f"  YNAI5 Price Alert Check — {now}")
-    print(f"  CoinGecko: {api_mode}")
-    print(f"{'='*60}\n")
+
+    header = [
+        "",
+        "=" * 60,
+        f"  YNAI5 Price Alert Check — {now}",
+        f"  CoinGecko: {api_mode}",
+        "=" * 60,
+        "",
+    ]
+    for line in header:
+        print(line)
 
     coin_ids = list(WATCHLIST.keys())
     prices = get_prices(coin_ids)
@@ -154,6 +207,8 @@ def main():
         return
 
     alerts_fired = []
+    big_moves = []
+    log_lines = header[:]
 
     for coin_id, config in WATCHLIST.items():
         symbol = config["symbol"]
@@ -162,39 +217,70 @@ def main():
         change_24h = data.get("usd_24h_change", 0)
 
         if current is None:
-            print(f"  {symbol:<8} [NO DATA]")
+            line = f"  {symbol:<8} [NO DATA — check CoinGecko ID: {coin_id}]"
+            print(line)
+            log_lines.append(line)
             continue
 
-        # Check for triggered alerts
+        # Check for triggered price alerts
         triggered = check_alerts(symbol, current, config["alerts"])
+
+        # Check for big moves
+        move_flag = big_move_flag(change_24h)
+        if move_flag:
+            big_moves.append((symbol, current, change_24h, move_flag))
 
         # Status display
         change_str = format_change(change_24h)
-        status = "*** ALERT ***" if triggered else "OK"
-        print(f"  {symbol:<8} ${current:<12.4f} 24h: {change_str:<10} [{status}]")
+        status = "*** ALERT ***" if triggered else ("BIG MOVE" if move_flag else "OK")
+        line = f"  {symbol:<8} ${current:<12.4f} 24h: {change_str:<10} [{status}]{move_flag}"
+        print(line)
+        log_lines.append(line)
 
         if triggered:
             for threshold, label in triggered:
-                print(f"           >> ${threshold} — {label}")
+                alert_line = f"           >> ${threshold} — {label}"
+                print(alert_line)
+                log_lines.append(alert_line)
                 alerts_fired.append((symbol, current, threshold, label))
 
         if config.get("note"):
-            print(f"           Note: {config['note']}")
+            note_line = f"           Note: {config['note']}"
+            print(note_line)
         print()
+        log_lines.append("")
 
     # Summary
-    print(f"{'='*60}")
+    summary = ["=" * 60]
     if alerts_fired:
-        print(f"  ALERTS FIRED: {len(alerts_fired)}")
+        summary.append(f"  PRICE ALERTS FIRED: {len(alerts_fired)}")
         for symbol, price, threshold, label in alerts_fired:
-            print(f"  {symbol}: ${price:.4f} — {label}")
+            summary.append(f"  {symbol}: ${price:.4f} — {label}")
     else:
-        print(f"  No alert thresholds crossed. All tickers within normal range.")
-    print(f"{'='*60}\n")
+        summary.append("  No price alert thresholds crossed.")
+
+    if big_moves:
+        summary.append(f"")
+        summary.append(f"  BIG MOVES (>8% in 24h):")
+        for symbol, price, change, flag in big_moves:
+            summary.append(f"  {symbol}: ${price:.4f}  {format_change(change)}{flag}")
+
+    if not alerts_fired and not big_moves:
+        summary.append("  Market status: normal. No action needed.")
+
+    summary.append("=" * 60)
+    summary.append("")
+
+    for line in summary:
+        print(line)
+    log_lines.extend(summary)
+
+    # Write to daily log file
+    log_results(log_lines)
 
     print("Tip: Run this script anytime for a quick check.")
-    print("     To add new tickers, edit the WATCHLIST dict at the top of this file.")
-    print("     Schedule: Windows Task Scheduler -> Action -> 'python price-alert.py'\n")
+    print("     Schedule: Windows Task Scheduler -> Action -> 'python price-alert.py'")
+    print(f"     Logs saved to: projects/crypto-monitoring/logs/\n")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 _Active holdings and tickers. Updated as positions change._
 _Use /market-check [ticker] for live price + news + sentiment._
 
-Last Updated: 2026-03-09
+Last Updated: 2026-03-10
 
 ---
 
@@ -38,10 +38,11 @@ Last Updated: 2026-03-09
 - **Platform:** Kraken
 - **Current Interest:** Hold/Watch
 - **Balance:** 1,873.13 PENGU
-- **Avg Buy Price:** <$0.01
-- **Current Price:** <$0.01
-- **Unrealized P&L:** -$0.069
-- **Notes:** Meme/NFT token. Small speculative position.
+- **Avg Buy Price:** ~$0.007
+- **Current Price:** $0.0071 (2026-03-10)
+- **Position Value:** ~$13.30
+- **Notes:** Meme/NFT token. ATH ~$0.07 (Dec 2024). Currently -90% from ATH.
+- **Alert DOWN:** $0.003 | **Alert UP:** $0.015 / $0.04
 
 ### EIGEN — EigenLayer
 - **Platform:** Kraken
@@ -56,9 +57,10 @@ Last Updated: 2026-03-09
 - **Current Interest:** Watch
 - **Balance:** 0.00308 BABY
 - **Avg Buy Price:** $0.02815
-- **Current Price:** $0.01436
-- **24h Change:** -8.48%
-- **Notes:** BTC staking protocol. Down significantly. Monitor.
+- **Current Price:** $0.0162 (2026-03-10) +13.64% today
+- **Unrealized P&L:** -$0.000374 (tiny position)
+- **Notes:** BTC staking protocol. Down from avg. Bounced today.
+- **Alert DOWN:** $0.008 | **Alert UP:** $0.025 (avg buy) / $0.05
 
 ---
 
@@ -76,10 +78,10 @@ Last Updated: 2026-03-09
 - **Platform:** Revolut
 - **Current Interest:** Hold/Watch
 - **Balance:** 0.01896662 BCH
-- **Current Price:** ~€388
-- **Position Value:** ~€7.35
-- **24h:** -2.00%
+- **Current Price:** $447.72 / ~€415 (2026-03-10)
+- **Position Value:** ~$8.49
 - **Notes:** Secondary Bitcoin fork. Monitor for exit opportunity.
+- **Alert DOWN:** $250 | **Alert UP:** $450 / $600
 
 ### SOL — Solana
 - **Platform:** Revolut
@@ -114,7 +116,7 @@ _Added: 2026-03-09 | Status: WATCHING — small entry, monitoring sell pressure_
 - **Entry Date:** 2026-03-09 | **Avg Buy Price:** $0.3326
 - **Balance:** 3.498 OPN | **Position Value:** ~$1.10
 - **Unrealized P&L:** -$0.0671 (-5.77%)
-- **Current Price:** ~$0.314 (as of last check)
+- **Current Price:** $0.338 (2026-03-10) +10.67% today — first day above avg buy
 - **ATH:** $0.75 (Feb 23, 2026) — currently **-58% from ATH**
 - **Market Cap:** $62.2M | **24H Volume:** $137.1M | **Market Rank:** #387
 - **FDV:** ~$320M | Circulating: 200M / 1B total (20% only)
