@@ -20,6 +20,7 @@ _Auto-added by /research skill as YYYY-MM-DD-topic.md_
 | 2026-03-09 | TikTok AI tool stack + full automation pipeline | 2026-03-09-tiktok-tool-stack-automation.md |
 | 2026-03-09 | AI prompt engineering — video & image generation 2026 | 2026-03-09-ai-prompt-engineering-video-images.md |
 | 2026-03-09 | Google APIs integration — Gemini, YouTube, Gmail free tiers | 2026-03-09-google-apis-integration.md |
+| 2026-03-09 | Google Veo API — video generation, free tier, access methods | 2026-03-09-google-veo-api-video-generation.md |
 
 ## Reference Files
 _Stable reference material added as needed_
