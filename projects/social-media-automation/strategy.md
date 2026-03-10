@@ -36,24 +36,35 @@ Last Updated: 2026-03-09
 
 ## TikTok Strategy
 
-**Niche:** Short AI content — quick animations, AI storytelling, AI news, crypto alerts
-**Target Audience:** Gen Z/Millennial, AI-curious, crypto traders, entertainment seekers
-**Posting Cadence:** 1x per day minimum (automated)
-**Content Format:** 15–60 seconds. Hook in first 2 seconds. Fast cuts. Captions on screen.
+**Phase 1 (NOW — Active):** AI News but Funny / Relatable
+**Phase 2 (After traction):** AI Tools + Finance/Crypto Hybrid (high RPM)
+**Phase 3 (Long game):** YNAI5 World cartoon universe (brand building)
 
-**Content Types:**
-- AI animation clips (short story-driven)
-- "Did you know AI can..." quick facts
-- Crypto price moves + AI commentary
-- Behind-the-scenes AI creation process
+### Phase 1 Format — MVP
+**Vibe:** Normal user TikTok energy — rapid, casual, slightly chaotic, very shareable
+**Niche:** AI/tech news reaction — "bro did you see what Claude/Gemini just did??"
+**Tone:** Cliché funny, relatable, slightly shocked — like texting your friend about wild AI news
+**Length:** 15–40 seconds
+**Hook (first 2 sec):** shock/curiosity — "nobody's talking about this" / "wait they actually did this?"
+**Body:** show the actual update/moment, quick reaction, funny observation
+**End:** punchline or mini-cliffhanger + "follow for AI updates"
+**Posting Cadence:** 1x per day minimum — batch produce 5 at a time
+**Target Audience:** Gen Z/Millennial, casually AI-curious, regular TikTok scrollers
+
+**Why this works:**
+- Authentic casual energy = algorithm-friendly (TikTok disfavors polished AI slop)
+- AI news = always fresh, always shareable
+- Funny angle = comments, saves, shares > passive views
+- Builds audience AND teaches us what content format/topic resonates
+- Low production cost — can do text-on-screen + voiceover, no need for Sora every video
 
 **Growth Tactics:**
-- Post during peak hours (7–9am, 12–1pm, 7–9pm local)
-- Trending sounds + original audio
-- Duets and stitches with viral AI content
-- Strong hook → payoff in under 15s for retention
+- Post during peak hours (7–9am, 12–1pm, 7–9pm AST)
+- Trending audio under the voiceover
+- Stitch/Duet real AI demos to add your reaction layer
+- Hooks that create curiosity gaps ("this changes everything" / "they added WHAT")
 
-**Goal:** Viral reach → TikTok Creator Fund → funnel audience to YouTube
+**Goal:** First 1,000 followers → identify best-performing format → move to Phase 2
 
 **Current Metrics:**
 - Followers: —

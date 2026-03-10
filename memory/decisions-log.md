@@ -26,5 +26,11 @@ _Chronological log of all significant decisions made across sessions._
 **Reasoning:** Simpler, faster, no context switching. Other AIs can be added as sub-agent skills via API when genuinely needed
 **Outcome:** [pending — to be updated]
 
+### [2026-03-09] TikTok Niche MVP Strategy
+**Context:** Full niche analysis done (AI Tools + Finance Hybrid, 9/10). User chose faster entry point.
+**Decision:** Start TikTok with "AI News but Funny/Relatable" format — casual, rapid, shareable reactions to Claude/Gemini/AI updates.
+**Reasoning:** Fastest path to first upload. Algorithm rewards authentic casual content over polished AI. Low production cost. Builds audience + data before committing to high-RPM pipeline.
+**Outcome:** [pending]
+
 ---
 _Add entries using the format above. Also logged in decisions/ folder per entry._
