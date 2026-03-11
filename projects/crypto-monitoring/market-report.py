@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-YNAI5 Market Report Bot
-Daily comprehensive briefing: prices + Kraken portfolio + live news + AI analysis
+YNAI5 Market Report Bot v2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sends to Telegram 3x/day via Windows Task Scheduler.
 
-Runs automatically via Windows Task Scheduler (8 AM, 6 PM, 9 PM daily).
-Sends to Telegram — works 24/7 without Claude.
+Section order:
+  Header → Portfolio Total → Market Pulse (w/ RSI) →
+  Holdings → Active Alerts → News → YNAI5 AI Take
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Keys read from .env.local:
+Keys from .env.local:
   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
   COINGECKO_API_KEY, KRAKEN_API_KEY, KRAKEN_API_SECRET
   BRAVE_SEARCH_API_KEY, GEMINI_API_KEY
 
-No pip dependencies — stdlib only.
+No pip installs — stdlib only.
 """
 
 import base64
@@ -26,7 +29,7 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-# Force UTF-8 on Windows console (needed for emoji in print statements)
+# ── UTF-8 fix for Windows console ────────────────────────────────────────────
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -35,7 +38,6 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 
 
 # ── Load .env.local ───────────────────────────────────────────────────────────
-
 def load_env() -> dict:
     env_path = Path(__file__).resolve().parent.parent.parent / ".env.local"
     env = {}
@@ -57,16 +59,23 @@ KRAKEN_API_SECRET  = ENV.get("KRAKEN_API_SECRET", "")
 BRAVE_SEARCH_KEY   = ENV.get("BRAVE_SEARCH_API_KEY", "")
 GEMINI_API_KEY     = ENV.get("GEMINI_API_KEY", "")
 
+SEP = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# ── Portfolio Config ──────────────────────────────────────────────────────────
 
-# Revolut holdings (no API — hardcoded from known positions, update if changed)
-REVOLUT_HOLDINGS = {
-    "bitcoin-cash": 0.01896,   # BCH — confirmed
-    # BTC and SOL amounts unknown — tracked in Revolut app
-}
+# ── Portfolio config ──────────────────────────────────────────────────────────
+def load_revolut_config() -> dict:
+    """Load Revolut holdings from revolut-config.json (browser-scraped or manual)."""
+    cfg_path = Path(__file__).resolve().parent / "revolut-config.json"
+    if cfg_path.exists():
+        try:
+            return json.loads(cfg_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"holdings": {"bitcoin-cash": {"qty": 0.01896}}}
 
-# Full watchlist: avg_buy used for P&L calculation, alerts for threshold detection
+
+REVOLUT_CFG = load_revolut_config()
+
 WATCHLIST = {
     "opinion":        {"symbol": "OPN",   "avg_buy": 0.3326, "alerts": [(0.18, "DOWN"), (0.45, "UP"), (0.60, "UP")]},
     "bitcoin":        {"symbol": "BTC",   "avg_buy": 90111,  "alerts": [(55000, "DOWN"), (90000, "UP"), (110000, "UP")]},
@@ -78,9 +87,9 @@ WATCHLIST = {
     "babylon":        {"symbol": "BABY",  "avg_buy": 0.028,  "alerts": [(0.008, "DOWN"), (0.025, "UP"), (0.050, "UP")]},
 }
 
-# Kraken asset code → CoinGecko ID mapping
+# Kraken asset code → CoinGecko ID
 KRAKEN_ASSET_MAP = {
-    "XXBT": "bitcoin", "XBT": "bitcoin",
+    "XXBT": "bitcoin",  "XBT": "bitcoin",
     "XETH": "ethereum", "ETH": "ethereum",
     "SOL":  "solana",   "XSOL": "solana",
     "OPN":  "opinion",
@@ -90,9 +99,16 @@ KRAKEN_ASSET_MAP = {
     "BCH":   "bitcoin-cash",
 }
 
+# Kraken public OHLC pair codes (for RSI — no API key needed)
+KRAKEN_OHLC_PAIRS = {
+    "bitcoin":      "XBTUSD",
+    "ethereum":     "ETHUSD",
+    "solana":       "SOLUSD",
+    "bitcoin-cash": "BCHUSD",
+}
+
 
 # ── CoinGecko Prices ──────────────────────────────────────────────────────────
-
 def fetch_prices() -> dict:
     ids = ",".join(WATCHLIST.keys())
     url = (
@@ -111,8 +127,65 @@ def fetch_prices() -> dict:
         return {}
 
 
-# ── Kraken Portfolio ──────────────────────────────────────────────────────────
+# ── Kraken OHLC + RSI (public API, no key needed) ────────────────────────────
+def fetch_kraken_ohlc(pair: str, interval: int = 60, count: int = 25) -> list:
+    """Fetch hourly closing prices from Kraken public OHLC endpoint."""
+    try:
+        url = f"https://api.kraken.com/0/public/OHLC?pair={pair}&interval={interval}"
+        req = urllib.request.Request(url, headers={"User-Agent": "YNAI5-Bot/2.0"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read())
+        result = data.get("result", {})
+        # Result has one key (Kraken pair name) + "last"
+        candles = next((v for k, v in result.items() if k != "last"), [])
+        # Candle format: [time, open, high, low, close, vwap, volume, count]
+        return [float(c[4]) for c in candles[-count:]]
+    except Exception as e:
+        print(f"[OHLC {pair}] {e}")
+        return []
 
+
+def calculate_rsi(closes: list, period: int = 14):
+    """RSI from closing prices. Returns float or None if insufficient data."""
+    if len(closes) < period + 1:
+        return None
+    deltas = [closes[i] - closes[i - 1] for i in range(1, len(closes))]
+    gains  = [max(0.0, d) for d in deltas[-period:]]
+    losses = [abs(min(0.0, d)) for d in deltas[-period:]]
+    avg_gain = sum(gains) / period
+    avg_loss = sum(losses) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return round(100 - (100 / (1 + rs)), 1)
+
+
+def rsi_tag(rsi) -> str:
+    if rsi is None:
+        return ""
+    if rsi < 30:
+        return f"  🔥RSI {rsi:.0f}"    # oversold
+    if rsi < 45:
+        return f"  📉RSI {rsi:.0f}"    # bearish lean
+    if rsi < 55:
+        return f"  RSI {rsi:.0f}"      # neutral
+    if rsi < 70:
+        return f"  📈RSI {rsi:.0f}"    # bullish lean
+    return f"  ❄️RSI {rsi:.0f}"        # overbought
+
+
+def get_technical_signals() -> dict:
+    """Returns {coin_id: rsi_float} for coins with Kraken OHLC data."""
+    signals = {}
+    for coin_id, pair in KRAKEN_OHLC_PAIRS.items():
+        closes = fetch_kraken_ohlc(pair)
+        rsi = calculate_rsi(closes)
+        if rsi is not None:
+            signals[coin_id] = rsi
+    return signals
+
+
+# ── Kraken Private Portfolio ──────────────────────────────────────────────────
 def fetch_kraken_balance() -> dict:
     if not KRAKEN_API_KEY or not KRAKEN_API_SECRET:
         return {}
@@ -141,7 +214,6 @@ def fetch_kraken_balance() -> dict:
 
 
 def kraken_to_portfolio(raw_balances: dict, prices: dict) -> list:
-    """Convert raw Kraken balances to human-readable portfolio rows."""
     rows = []
     for asset, qty_str in raw_balances.items():
         qty = float(qty_str)
@@ -151,40 +223,40 @@ def kraken_to_portfolio(raw_balances: dict, prices: dict) -> list:
         if not coin_id or coin_id not in prices:
             continue
         price = prices[coin_id].get("usd", 0)
-        sym = WATCHLIST[coin_id]["symbol"]
-        avg = WATCHLIST[coin_id].get("avg_buy")
-        pnl_pct = ((price - avg) / avg * 100) if avg else None
+        sym   = WATCHLIST[coin_id]["symbol"]
+        avg   = WATCHLIST[coin_id].get("avg_buy")
+        pnl   = ((price - avg) / avg * 100) if avg else None
         rows.append({
-            "symbol": sym,
-            "qty": qty,
-            "price": price,
+            "symbol":    sym,
+            "qty":       qty,
+            "price":     price,
             "usd_value": qty * price,
-            "pnl_pct": pnl_pct,
+            "pnl_pct":   pnl,
         })
     rows.sort(key=lambda x: x["usd_value"], reverse=True)
     return rows
 
 
 def revolut_portfolio(prices: dict) -> list:
-    """Build Revolut rows from hardcoded holdings."""
+    """Build Revolut rows from revolut-config.json holdings."""
     rows = []
-    for coin_id, qty in REVOLUT_HOLDINGS.items():
-        if coin_id not in prices:
+    for coin_id, info in REVOLUT_CFG.get("holdings", {}).items():
+        qty = info.get("qty") if isinstance(info, dict) else info
+        if not qty or coin_id not in prices:
             continue
         price = prices[coin_id].get("usd", 0)
-        sym = WATCHLIST[coin_id]["symbol"]
+        sym   = WATCHLIST.get(coin_id, {}).get("symbol", coin_id.upper())
         rows.append({
-            "symbol": sym,
-            "qty": qty,
-            "price": price,
+            "symbol":    sym,
+            "qty":       qty,
+            "price":     price,
             "usd_value": qty * price,
         })
     return rows
 
 
-# ── Brave News Search ─────────────────────────────────────────────────────────
-
-def fetch_news(query: str = "crypto bitcoin market analysis today", count: int = 4) -> list:
+# ── Brave News ────────────────────────────────────────────────────────────────
+def fetch_news(query: str = "bitcoin ethereum crypto market today", count: int = 3) -> list:
     if not BRAVE_SEARCH_KEY:
         return []
     try:
@@ -207,8 +279,7 @@ def fetch_news(query: str = "crypto bitcoin market analysis today", count: int =
         return []
 
 
-# ── Gemini AI Analysis ────────────────────────────────────────────────────────
-
+# ── Gemini Analysis ───────────────────────────────────────────────────────────
 def gemini_analysis(context: str) -> str:
     if not GEMINI_API_KEY:
         return ""
@@ -218,14 +289,15 @@ def gemini_analysis(context: str) -> str:
             f"models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
         )
         prompt = (
-            "You are YNAI5, a personal crypto trading assistant for Shami in Aruba.\n\n"
+            "You are YNAI5 — Shami's personal AI trading partner in Aruba. "
+            "Sharp, direct, no fluff. You know his exact positions.\n\n"
             f"{context}\n\n"
-            "Write a short mobile-friendly market briefing (max 160 words total):\n"
-            "1. Market vibe — one punchy sentence (what's driving price action today)\n"
-            "2. Two bullet points — notable moves or setups in the portfolio\n"
-            "3. One action tip — what Shami should watch or do right now\n"
-            "4. Final line: Sentiment: 🟢 Bullish / 🔴 Bearish / 🟡 Neutral\n\n"
-            "Be direct, reference real prices, speak like a sharp trading friend. No fluff."
+            "Give a punchy mobile-friendly market take (max 130 words):\n"
+            "→ Line 1: What's driving price action TODAY (one sharp sentence, real drivers)\n"
+            "→ 2 bullet points: positions Shami should focus on right now (use real prices)\n"
+            "→ One action line: Watch / Trim / Hold / Buy dip at $X — be specific\n"
+            "→ Final line: Mood: 🟢 Bullish | 🔴 Bearish | 🟡 Neutral\n\n"
+            "Reference his coins by name. Use real numbers. Speak like a sharp friend, not a bot."
         )
         payload = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode()
         req = urllib.request.Request(
@@ -239,11 +311,10 @@ def gemini_analysis(context: str) -> str:
         return ""
 
 
-# ── Telegram Send ─────────────────────────────────────────────────────────────
-
+# ── Telegram ──────────────────────────────────────────────────────────────────
 def send_telegram(message: str):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        print("[TELEGRAM] Not configured — set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID in .env.local")
+        print("[TELEGRAM] Not configured — set tokens in .env.local")
         return
     try:
         payload = json.dumps({
@@ -258,180 +329,238 @@ def send_telegram(message: str):
         )
         with urllib.request.urlopen(req, timeout=10):
             pass
-        print("[TELEGRAM] Report sent ✓")
+        print("[TELEGRAM] ✓ Sent")
     except Exception as e:
         print(f"[TELEGRAM] Failed: {e}")
 
 
-# ── Build Report ──────────────────────────────────────────────────────────────
+# ── Format helpers ────────────────────────────────────────────────────────────
+def fmt_price(price: float) -> str:
+    if price >= 10000: return f"${price:,.0f}"
+    if price >= 1000:  return f"${price:,.0f}"
+    if price >= 1:     return f"${price:,.2f}"
+    if price >= 0.01:  return f"${price:.4f}"
+    return f"${price:.6f}"
 
+
+def pnl_tag(price: float, avg) -> str:
+    if not avg:
+        return ""
+    pct  = (price - avg) / avg * 100
+    sign = "+" if pct >= 0 else ""
+    icon = "🟢" if pct >= 5 else ("🔴" if pct <= -5 else "🟡")
+    return f"  {icon}{sign}{pct:.0f}%"
+
+
+# ── Build Report ──────────────────────────────────────────────────────────────
 def build_report(
-    now: str,
+    now_str: str,
     session_label: str,
     prices: dict,
     kraken_rows: list,
     revolut_rows: list,
+    signals: dict,
     news: list,
     analysis: str,
 ) -> str:
-    lines = [f"<b>📊 YNAI5 Daily Briefing — {now} ({session_label})</b>", ""]
+    lines = []
 
-    # ── Prices ──
-    lines.append("💹 <b>PRICES</b>")
+    # ── HEADER
+    lines += [
+        SEP,
+        f"<b>📊 YNAI5  ·  {session_label}  ·  {now_str} AST</b>",
+        SEP,
+        "",
+    ]
+
+    # ── PORTFOLIO TOTAL
+    kraken_total  = sum(r["usd_value"] for r in kraken_rows)
+    revolut_known = sum(r["usd_value"] for r in revolut_rows)
+    grand_total   = kraken_total + revolut_known
+    lines += [
+        f"💰 <b>PORTFOLIO  ~${grand_total:,.0f} USD</b>",
+        f"   Kraken ${kraken_total:,.0f}  ·  Revolut ${revolut_known:,.0f}+ (BTC/SOL in app)",
+        "",
+    ]
+
+    # ── MARKET PULSE
+    greens = sum(
+        1 for cid in WATCHLIST
+        if prices.get(cid, {}).get("usd_24h_change", 0) >= 0
+    )
+    reds = len(WATCHLIST) - greens
+    lines.append(f"{SEP}")
+    lines.append(f"📊 <b>MARKET PULSE</b>  [{greens}🟢 · {reds}🔴 today]")
+    lines.append("")
+
     alerts_active = []
-    context_prices = []
-
     for coin_id, cfg in WATCHLIST.items():
-        sym = cfg["symbol"]
-        data = prices.get(coin_id, {})
-        price = data.get("usd")
+        sym    = cfg["symbol"]
+        data   = prices.get(coin_id, {})
+        price  = data.get("usd")
         change = data.get("usd_24h_change", 0.0)
 
         if price is None:
-            lines.append(f"  {sym}: NO DATA")
+            lines.append(f"  ⚠️ <b>{sym}</b>: no data")
             continue
 
-        sign = "+" if change >= 0 else ""
+        sign  = "+" if change >= 0 else ""
         trend = "🟢" if change >= 0 else "🔴"
-        move = " ⚡" if abs(change) >= 8 else ""
+        big   = " ⚡" if abs(change) >= 8 else ""
+        pnl   = pnl_tag(price, cfg.get("avg_buy"))
+        rsi   = rsi_tag(signals.get(coin_id))
 
-        avg = cfg.get("avg_buy")
-        pnl = ""
-        if avg:
-            pct = (price - avg) / avg * 100
-            pnl = f"  [{'+' if pct >= 0 else ''}{pct:.0f}% vs buy]"
+        lines.append(
+            f"  {trend} <b>{sym}</b>  {fmt_price(price)}  {sign}{change:.1f}%{big}{pnl}{rsi}"
+        )
 
-        lines.append(f"  {trend} <b>{sym}</b>: ${price:,.4f}  {sign}{change:.1f}%{move}{pnl}")
-        context_prices.append(f"{sym}: ${price:,.4f} ({sign}{change:.1f}% 24h, avg buy: ${avg or 'N/A'})")
-
+        # Collect threshold alerts
         for threshold, direction in cfg["alerts"]:
             if direction == "DOWN" and price <= threshold:
-                alerts_active.append(f"⬇️ {sym} @ ${price:,.4f} hit ${threshold} support")
+                alerts_active.append(
+                    f"⬇️ <b>{sym}</b> {fmt_price(price)} — hit ${threshold} support"
+                )
             elif direction == "UP" and price >= threshold:
-                alerts_active.append(f"⬆️ {sym} @ ${price:,.4f} hit ${threshold} target")
+                alerts_active.append(
+                    f"⬆️ <b>{sym}</b> {fmt_price(price)} — hit ${threshold} target"
+                )
 
     lines.append("")
 
-    # ── Portfolio Snapshot ──
-    total_usd = 0.0
+    # ── HOLDINGS
+    lines.append(SEP)
+    lines.append("🏦 <b>HOLDINGS</b>")
+    lines.append("")
+
     if kraken_rows:
-        kraken_total = sum(r["usd_value"] for r in kraken_rows)
-        total_usd += kraken_total
-        lines.append(f"💼 <b>KRAKEN</b>  ~${kraken_total:,.0f} USD")
+        lines.append(f"   <b>Kraken</b>  ~${kraken_total:,.0f}")
         for r in kraken_rows:
-            pnl_str = ""
-            if r.get("pnl_pct") is not None:
-                p = r["pnl_pct"]
-                pnl_str = f"  [{'+' if p >= 0 else ''}{p:.0f}% P&L]"
+            p = r.get("pnl_pct")
+            p_str = f"  [{'+' if p and p >= 0 else ''}{p:.0f}% P&L]" if p is not None else ""
             lines.append(
-                f"  {r['symbol']}: {r['qty']:.4f} @ ${r['price']:,.2f} = ${r['usd_value']:,.0f}{pnl_str}"
+                f"   {r['symbol']}  {r['qty']:.4f}  →  ${r['usd_value']:,.2f}{p_str}"
             )
         lines.append("")
 
     if revolut_rows:
-        rev_total = sum(r["usd_value"] for r in revolut_rows)
-        total_usd += rev_total
-        lines.append(f"📱 <b>REVOLUT</b>  ~${rev_total:,.0f} USD (known positions only)")
+        lines.append(f"   <b>Revolut</b>  ~${revolut_known:,.0f}")
         for r in revolut_rows:
             lines.append(
-                f"  {r['symbol']}: {r['qty']:.5f} @ ${r['price']:,.2f} = ${r['usd_value']:,.0f}"
+                f"   {r['symbol']}  {r['qty']:.5f}  →  ${r['usd_value']:,.2f}"
             )
-        lines.append("  BTC + SOL amounts tracked in app — check manually")
+        lines.append("   BTC + SOL: check app 📱")
         lines.append("")
 
-    if total_usd > 0:
-        lines.append(f"📊 <b>TRACKED TOTAL: ~${total_usd:,.0f} USD</b>")
-        lines.append("")
-
-    # ── Active Alerts ──
+    # ── ACTIVE ALERTS
     if alerts_active:
+        lines.append(SEP)
         lines.append("🚨 <b>ALERTS TRIGGERED</b>")
+        lines.append("")
         for a in alerts_active:
-            lines.append(f"  {a}")
+            lines.append(f"   {a}")
         lines.append("")
 
-    # ── News ──
+    # ── NEWS
     if news:
-        lines.append("📰 <b>MARKET NEWS</b>")
+        lines.append(SEP)
+        lines.append("📰 <b>NEWS</b>")
+        lines.append("")
         for item in news:
-            title = item["title"][:85]
-            age = f" ({item['age']})" if item.get("age") else ""
-            lines.append(f"  • {title}{age}")
+            title = item["title"][:82]
+            age   = f"  ({item['age']})" if item.get("age") else ""
+            lines.append(f"   • {title}{age}")
         lines.append("")
 
-    # ── Gemini AI Analysis ──
+    # ── AI TAKE
     if analysis:
-        lines.append("🤖 <b>YNAI5 ANALYSIS</b>")
+        lines.append(SEP)
+        lines.append("🤖 <b>YNAI5 TAKE</b>")
+        lines.append("")
         lines.append(analysis)
         lines.append("")
 
-    lines.append("— YNAI5 Alert Bot 🤖")
+    # ── FOOTER
+    lines.append(SEP)
+    lines.append(f"<i>@SoloClaude5_bot  ·  {now_str} AST</i>")
+
     return "\n".join(lines)
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ── Context for Gemini ────────────────────────────────────────────────────────
+def build_context(prices: dict, signals: dict, news: list) -> str:
+    price_lines = []
+    for coin_id, cfg in WATCHLIST.items():
+        sym    = cfg["symbol"]
+        data   = prices.get(coin_id, {})
+        price  = data.get("usd")
+        change = data.get("usd_24h_change", 0.0)
+        avg    = cfg.get("avg_buy")
+        if price:
+            sign = "+" if change >= 0 else ""
+            pnl  = f", {'+' if avg and price >= avg else ''}{((price-avg)/avg*100):.0f}% vs avg" if avg else ""
+            rsi  = signals.get(coin_id)
+            rsi_s = f", RSI {rsi:.0f}" if rsi else ""
+            price_lines.append(f"{sym}: {fmt_price(price)} ({sign}{change:.1f}% 24h{pnl}{rsi_s})")
+    news_lines = [f"- {n['title']}" for n in news]
+    return (
+        "Current portfolio:\n" + "\n".join(price_lines) +
+        ("\n\nLatest news:\n" + "\n".join(news_lines) if news_lines else "")
+    )
 
+
+# ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     now = datetime.now()
     now_str = now.strftime("%Y-%m-%d %H:%M")
-    hour = now.hour
-    if hour < 12:
+    h = now.hour
+    if h < 12:
         session_label = "Morning ☀️"
-    elif hour < 18:
+    elif h < 18:
         session_label = "Afternoon 🌤️"
-    elif hour < 21:
+    elif h < 21:
         session_label = "Evening 🌆"
     else:
         session_label = "Night 🌙"
 
-    print(f"\n{'='*55}")
-    print(f"  YNAI5 Market Report — {now_str} ({session_label})")
-    print(f"{'='*55}\n")
+    print(f"\n{'━'*52}")
+    print(f"  YNAI5 Market Report v2 — {now_str} ({session_label})")
+    print(f"{'━'*52}\n")
 
-    print("  [1/4] Fetching prices from CoinGecko...")
+    print("  [1/5] Prices from CoinGecko...")
     prices = fetch_prices()
     if not prices:
         print("  [ERROR] No price data — aborting.")
         return
 
-    print("  [2/4] Fetching Kraken portfolio...")
-    kraken_raw = fetch_kraken_balance()
-    kraken_rows = kraken_to_portfolio(kraken_raw, prices) if kraken_raw else []
+    print("  [2/5] Kraken portfolio...")
+    kraken_raw   = fetch_kraken_balance()
+    kraken_rows  = kraken_to_portfolio(kraken_raw, prices) if kraken_raw else []
     revolut_rows = revolut_portfolio(prices)
 
-    print("  [3/4] Fetching crypto news via Brave Search...")
+    print("  [3/5] Technical signals (Kraken OHLC → RSI)...")
+    signals = get_technical_signals()
+    for coin_id, rsi in signals.items():
+        sym = WATCHLIST.get(coin_id, {}).get("symbol", coin_id)
+        print(f"      {sym}: RSI {rsi:.0f}")
+
+    print("  [4/5] News via Brave Search...")
     news = fetch_news("bitcoin ethereum crypto market today analysis")
 
-    print("  [4/4] Generating AI analysis via Gemini...")
-    ctx = (
-        "Current portfolio prices:\n" + "\n".join(context_prices_list(prices)) + "\n\n"
-        "Latest news:\n" + "\n".join(f"- {n['title']}" for n in news)
-    )
+    print("  [5/5] Gemini AI analysis...")
+    ctx      = build_context(prices, signals, news)
     analysis = gemini_analysis(ctx)
 
-    report = build_report(now_str, session_label, prices, kraken_rows, revolut_rows, news, analysis)
+    report = build_report(
+        now_str, session_label, prices, kraken_rows,
+        revolut_rows, signals, news, analysis
+    )
 
-    # Console preview (strip HTML tags)
-    print("\n--- PREVIEW ---")
+    # Console preview (strip HTML tags for readability)
+    print("\n" + "━" * 52)
     print(re.sub(r"<[^>]+>", "", report))
-    print("--- END ---\n")
+    print("━" * 52 + "\n")
 
     send_telegram(report)
-
-
-def context_prices_list(prices: dict) -> list:
-    rows = []
-    for coin_id, cfg in WATCHLIST.items():
-        sym = cfg["symbol"]
-        data = prices.get(coin_id, {})
-        price = data.get("usd")
-        change = data.get("usd_24h_change", 0.0)
-        avg = cfg.get("avg_buy")
-        if price:
-            sign = "+" if change >= 0 else ""
-            pnl = f", {'+' if avg and price >= avg else ''}{((price-avg)/avg*100):.0f}% vs avg" if avg else ""
-            rows.append(f"{sym}: ${price:,.4f} ({sign}{change:.1f}% 24h{pnl})")
-    return rows
 
 
 if __name__ == "__main__":

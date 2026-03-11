@@ -1,0 +1,19 @@
+{
+  "_note": "Revolut holdings config. Claude auto-updates this via browser when logged in. Edit manually anytime.",
+  "url": "",
+  "last_updated": "2026-03-10",
+  "holdings": {
+    "bitcoin-cash": {
+      "qty": 0.01896,
+      "source": "manual"
+    },
+    "bitcoin": {
+      "qty": null,
+      "source": "check app — update manually or via browser scrape"
+    },
+    "solana": {
+      "qty": null,
+      "source": "check app — update manually or via browser scrape"
+    }
+  }
+}
