@@ -61,7 +61,13 @@ Be direct, structured, actionable. No filler.
 - Reasoning tasks: `kimi-k2-thinking` (deep analysis, slower)
 - Fast tasks: `kimi-k2` (128K context, cheaper)
 
-**API endpoint (official):**
+**PRIMARY: OpenRouter** (works from Aruba, no region issues)
+```
+Base URL: https://openrouter.ai/api/v1
+Model:    moonshotai/kimi-k2.5
+Key:      OPENROUTER_API_KEY from .env.local
+```
+
 ```python
 import urllib.request, json
 from pathlib import Path
@@ -74,11 +80,20 @@ def load_env():
             env[k.strip()] = v.strip()
     return env
 
-def call_kimi(task, model="kimi-k2.5"):
+def call_kimi(task, model="moonshotai/kimi-k2.5"):
     env = load_env()
-    api_key = env.get("KIMI_API_KEY", "")
+    # PRIMARY: OpenRouter
+    api_key = env.get("OPENROUTER_API_KEY", "")
+    url = "https://openrouter.ai/api/v1/chat/completions"
+
+    # FALLBACK: Moonshot direct (needs platform.moonshot.ai key, not OpenClaw token)
     if not api_key:
-        return "ERROR: KIMI_API_KEY not found in .env.local"
+        api_key = env.get("KIMI_API_KEY", "")
+        url = "https://api.moonshot.ai/v1/chat/completions"
+        model = "kimi-k2.5"
+
+    if not api_key:
+        return "ERROR: Add OPENROUTER_API_KEY to .env.local (openrouter.ai → Keys)"
 
     payload = json.dumps({
         "model": model,
@@ -87,25 +102,19 @@ def call_kimi(task, model="kimi-k2.5"):
         "max_tokens": 8192
     }).encode()
 
-    req = urllib.request.Request(
-        "https://api.moonshot.ai/v1/chat/completions",
-        data=payload,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-    )
+    req = urllib.request.Request(url, data=payload, headers={
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://ynai5.local",
+        "X-Title": "YNAI5"
+    })
     with urllib.request.urlopen(req, timeout=60) as r:
         result = json.loads(r.read())
     return result["choices"][0]["message"]["content"].strip()
 ```
 
-**Fallback (OpenRouter):** If official endpoint fails, use:
-```
-Base URL: https://openrouter.ai/api/v1
-Model: moonshotai/kimi-k2.5
-Key: OPENROUTER_API_KEY from .env.local
-```
+**Note:** OpenClaw integration tokens (sk-XXXX from Kimi app) do NOT work here.
+Get OpenRouter key at → openrouter.ai → Keys → Create key (free to sign up, pay per use)
 
 ### 5. Process Output
 - Display the response clearly in chat

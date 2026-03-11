@@ -1,6 +1,6 @@
 {
-  "_note": "Revolut holdings config. Claude auto-updates this via browser when logged in. Edit manually anytime.",
-  "url": "",
+  "_note": "Revolut is SSO-protected — URL cannot be pasted directly. Update holdings manually when balances change. Revisit via screenshot when needed.",
+  "url": "SSO-protected — cannot scrape. Open in browser manually.",
   "last_updated": "2026-03-10",
   "holdings": {
     "bitcoin-cash": {
