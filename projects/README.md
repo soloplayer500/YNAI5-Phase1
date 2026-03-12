@@ -1,7 +1,7 @@
 # Projects Index
 _Update this file whenever a new project is created._
 
-Last Updated: 2026-03-09
+Last Updated: 2026-03-12 (Session 8 — Tasks 7-9)
 
 ---
 
@@ -14,6 +14,8 @@ Last Updated: 2026-03-09
 | Multi-AI Prompt Optimization | 🔨 Active Dev | Medium | [multi-ai-prompt-optimization/](multi-ai-prompt-optimization/) |
 | Social Media Automation | 📋 Strategy Phase | Medium | [social-media-automation/](social-media-automation/) |
 | Personal AI Infrastructure | 🔄 Ongoing | Low | [personal-ai-infrastructure/](personal-ai-infrastructure/) |
+| Ralph Automation | 🔨 Building | High | [ralph-automation/](ralph-automation/) |
+| System Health | ✅ Active | High | [system-health/](system-health/) |
 
 ## Status Key
 - 🔨 Building — actively in development

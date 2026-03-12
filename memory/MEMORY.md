@@ -1,7 +1,7 @@
 # Memory Index
 _Claude auto-updates this file. Keep under 200 lines. Overflow goes to topic files._
 
-Last Updated: 2026-03-10 (Session 6)
+Last Updated: 2026-03-12 (Session 8)
 
 ---
 
@@ -52,8 +52,8 @@ See @memory/decisions-log.md
 | patterns.md | Recurring behaviors and workflow insights |
 | decisions-log.md | Chronological decision log |
 
-## Skills Available (13 total)
-/research, /session-close, /weekly-review, /decision, /remember, /market-check, /project-update, /voice-gen, /prompt-gen, /gemini, /kimi, /email-check, /kraken
+## Skills Available (16 total)
+/research, /session-close, /weekly-review, /decision, /remember, /market-check, /project-update, /voice-gen, /prompt-gen, /gemini, /kimi, /email-check, /kraken, /health-check, /docker, /backup
 
 ## Session Index
 | Date | Focus | File |
@@ -84,3 +84,20 @@ See @memory/decisions-log.md
 - [2026-03-11] Telegram-Claude bridge LIVE: @SoloClaude5_bot now calls Claude Haiku API. Runs at startup via startup folder bat
 - [2026-03-11] Virtual RAM: SET_VIRTUAL_RAM_AS_ADMIN.vbs on Desktop (run as admin, then restart)
 - [2026-03-11] ANTHROPIC_API_KEY added to .env.local — bridge uses claude-haiku-4-5-20251001 (~$0.0005/convo)
+- [2026-03-11] GitHub Actions workflow created — market-report.py runs 3x/day (8AM/6PM/9PM AST) on GitHub cloud. 7 secrets required. ~180 min/month — within free tier. Task Scheduler can be disabled once confirmed working.
+- [2026-03-11] Established YNAI5-KEY-INPUT.txt on Desktop as permanent secure API key input method — Claude reads it, adds to .env.local, then the file is cleared
+- [2026-03-12] New MCPs added: context7 (live docs), memory (persistent KV store), sequential-thinking (structured reasoning) — all free, no API key
+- [2026-03-12] Ralph Loop installed — autonomous multi-task dev agent. Use `ralph-setup <project>` then `ralph --live` in Git Bash. tmux/--monitor not available on Windows without WSL2
+- [2026-03-12] Claude Mem SKIPPED — known win32 bug (worker crashes). Revisit when WSL2 is set up
+- [2026-03-12] jq v1.8.1 installed via winget (required by Ralph Loop)
+- [2026-03-12] autonomous-agent.py built — direct Anthropic API agent (no CLI needed), runs in GitHub Actions
+- [2026-03-12] ralph-automation.yml created — schedules agent Mon/Wed/Fri 10AM AST, commits session outputs to repo
+- [2026-03-12] Docker MCP Toolkit confirmed — 100+ servers, free ones: DuckDuckGo, Docker Hub, Puppeteer (needs Docker Desktop open)
+- [2026-03-12] Integration audit: 6 MCPs working (Brave, Context7, Memory, SeqThinking, Gmail, Playwright), 12 keys in .env.local
+- [2026-03-12] ⚠️ Security: Telegram/Brave/Kimi/ElevenLabs/Gemini keys flagged for regeneration (shared in past sessions)
+- [2026-03-12] Session crash recovery LIVE: PreCompact/Stop/SessionStart hooks save backup automatically
+- [2026-03-12] /health-check skill: parallel diagnostics (psutil) → logs/ + optional Telegram
+- [2026-03-12] /docker skill: Docker on-demand (auto-starts Desktop, no 24/7 daemon)
+- [2026-03-12] startup.bat installed: price-alert.py + telegram-claude-bridge.py auto-start at Windows login
+- [2026-03-12] Cloud health: system-health.yml runs 9AM AST daily via GitHub Actions (checks CoinGecko/GitHub/Kraken)
+- [2026-03-12] fetch + git MCPs added (free, no API key)

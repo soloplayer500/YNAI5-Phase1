@@ -1,0 +1,21 @@
+name: YNAI5 Cloud Health Check
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # 9AM AST = 13:00 UTC daily
+  workflow_dispatch:
+
+jobs:
+  cloud-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests
+      - name: Run cloud health check
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python projects/system-health/cloud-health.py

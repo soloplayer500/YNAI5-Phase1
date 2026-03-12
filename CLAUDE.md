@@ -46,7 +46,8 @@ YNAI5-SU/
     ├── crypto-monitoring/                 ← Crypto tracking & analysis
     ├── multi-ai-prompt-optimization/      ← Prompt engineering frameworks
     ├── social-media-automation/           ← YT/TikTok/IG growth
-    └── personal-ai-infrastructure/        ← AI ecosystem design
+    ├── personal-ai-infrastructure/        ← AI ecosystem design
+    └── system-health/                     ← Health monitoring, crash recovery, startup
 ```
 
 ## Research Protocol
@@ -89,6 +90,9 @@ YNAI5-SU/
 - `/kimi [task] [input] [--model k2.5|k2-thinking] [--save]` — Kimi K2.5 sub-agent (Moonshot AI — agent swarms, 256K context, vision, parallel research)
 - `/email-check [query]` — search Gmail via MCP (brand deals, notifications, crypto alerts)
 - `/kraken [balance|price|trades|orders]` — Kraken exchange API — portfolio balance, live prices, trade history
+- `/health-check [--telegram] [--quick]` — system diagnostics (RAM/CPU/disk/internet/Docker) → system-health/logs/
+- `/docker [command]` — Docker on-demand (auto-starts Docker Desktop if needed)
+- `/backup` — manually trigger session backup → system-health/backup/session-backup.md
 
 ## Key Imports
 @context/profile.md
