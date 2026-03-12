@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-03-12 15:56:23",
+  "trigger": "compact",
+  "workspace": "C:\\Users\\shema\\OneDrive\\Desktop\\YNAI5-SU",
+  "top_priority": "AI Social Media Automation Pipeline",
+  "resume_prompt": "Session backup from 2026-03-12 15:56:23 (trigger: compact).\nWorkspace: C:/Users/shema/OneDrive/Desktop/YNAI5-SU\nTop priority: AI Social Media Automation Pipeline.\nCheck memory/MEMORY.md and actions/ for current state.\nRun /health-check to verify system. What were we working on?",
+  "hook_data": {}
+}
