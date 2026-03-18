@@ -1,7 +1,7 @@
 # Memory Index
 _Claude auto-updates this file. Keep under 200 lines. Overflow goes to topic files._
 
-Last Updated: 2026-03-12 (Session 8)
+Last Updated: 2026-03-18 (Session 12)
 
 ---
 
@@ -52,10 +52,11 @@ See @memory/decisions-log.md
 | patterns.md | Recurring behaviors and workflow insights |
 | decisions-log.md | Chronological decision log |
 
-## Skills Available (24 total)
+## Skills Available (26 total)
 /research, /session-close, /weekly-review, /decision, /remember, /market-check, /project-update, /voice-gen, /prompt-gen, /gemini, /kimi, /email-check, /kraken, /health-check, /docker, /backup
 /stock-screen, /dcf-value, /risk-analyze, /earnings-breakdown, /portfolio-strategy, /technical-analysis, /dividend-strategy, /competitive-analysis, /pattern-finder (finance suite — Session 8)
-/trend-check, /content-gen, /script-gen, /niche-finder (social media pipeline — 2026-03-16)
+/trend-check, /content-gen, /script-gen, /niche-finder, /video-plan (social media — 2026-03-16)
+/crypto-portfolio, /crypto-screen (crypto intelligence — Session 11-12)
 
 ## Session Index
 | Date | Focus | File |
@@ -65,6 +66,7 @@ See @memory/decisions-log.md
 | 2026-03-10 | Kraken API skill + price alert system (8 tickers) | sessions/2026-03-10-session-3.md |
 | 2026-03-10 | Claude API upgrades — 15 docs reviewed, free wins applied | sessions/2026-03-10-session-4.md |
 | 2026-03-10 | Portfolio snapshot, BTC market mechanics, NotebookLM crypto study doc | sessions/2026-03-10-session-5.md |
+| 2026-03-18 | GitHub push + cloud sync + Telegram redesign + crypto focus shift | sessions/2026-03-18-session-12.md |
 
 ## Docs Added
 | Date | Topic | File |
@@ -115,3 +117,16 @@ See @memory/decisions-log.md
 - [2026-03-16] Seedance 2.0 SUSPENDED globally March 15 — Disney C&D, copyright dispute. Avoid entirely.
 - [2026-03-16] ACTION: Go to pexels.com/api → free API key → paste in YNAI5-KEY-INPUT.txt → add PEXELS_API_KEY to .env.local
 - [2026-03-16] March 27 plan: Kling AI Standard ($6.99) + mcp-kling MCP → fully autonomous video pipeline
+- [2026-03-18] GitHub repo LIVE: https://github.com/soloplayer500/YNAI5-SU (public, master branch)
+- [2026-03-18] Cloud sync LIVE: GitHub Actions runs portfolio_monitor.py every 30min + morning briefing 9AM AST
+- [2026-03-18] 7 GitHub Secrets set automatically via Python + gh CLI (no manual steps needed)
+- [2026-03-18] Telegram messages redesigned: card format, 🟢🔴 P&L, ▲▼ 24h — mobile-first
+- [2026-03-18] Pinokio YNAI5 Bridge created: C:\pinokio\api\ynai5-bridge\ — starts Telegram bridge as daemon
+- [2026-03-18] FOCUS SHIFT: social media pipeline paused (hardware blocker), full focus on crypto/stocks
+- [2026-03-18] Brave Search hit 2000/month limit — ration searches, resets monthly
+- [2026-03-18] BTC at $71,400 — holding $70K support. BTC dominance 56.65% = risk-off, NOT alt season
+- [2026-03-18] Kraken portfolio: mostly dust positions. PENGU $14 (84% of portfolio). All coins underwater.
+- [2026-03-18] OPN WARNING: -15.8% today on top of -24.8% from avg buy. Watch $0.22 support.
+- [2026-03-18] NEXT WEEK: user gets paid — plan position sizes for BTC DCA + automation tools (Kling $6.99)
+- [2026-03-18] BTC symbol bug: shows "BT" instead of "BTC" in portfolio JSON — XXBT asset mapping issue
+- [2026-03-18] Claude.ai Projects system prompt ready with real GitHub URLs — user setting up on mobile

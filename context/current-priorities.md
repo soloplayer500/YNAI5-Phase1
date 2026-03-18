@@ -1,38 +1,41 @@
 # Current Priorities
 _Update this file monthly or whenever focus shifts. Claude checks this at every session start._
 
-Last Updated: 2026-03-09
+Last Updated: 2026-03-18
 
 ## Top Priority (Most Urgent)
-**AI Social Media Automation Pipeline — Revenue Generation**
-- Build automated niche finder → content idea generator → video/content production → upload workflow
-- Goal: first revenue from YouTube/TikTok/Instagram ASAP
-- Blocker: niche not fully defined yet — research + decide before building pipeline
-- Main files: `projects/social-media-automation/`, `projects/social-media-automation/content-tracker.md`
+**Crypto & Stock Trading — Capital Growth**
+- Laptop hardware limits video production — social media pipeline paused until better hardware
+- Focus: grow capital through smart crypto/stock plays using the full finance skills suite
+- Current Kraken positions are mostly dust/underwater — need strategy to recover and build
+- Tools ready: /crypto-screen, /crypto-portfolio, /technical-analysis, /portfolio-strategy, /risk-analyze
+- Daily habit: morning briefing (9AM AST auto) → scan opportunities → log predictions → track accuracy
 
 ## Priority 2
-**Crypto Portfolio Monitoring + Alerts**
-- Watchlist is live with current Revolut + Kraken holdings
-- Next: get /market-check alerts flowing, build trade evaluation habit via Ledger Node
-- Main files: `projects/crypto-monitoring/watchlist.md`, `projects/crypto-monitoring/trade-journal.md`
+**Prediction Feedback Loop — Build Edge**
+- Log every trade idea as a prediction via /crypto-portfolio --predict
+- Score outcomes weekly → find where Claude's analysis is most accurate
+- Goal: 70%+ accuracy over 20 predictions before scaling position sizes
+- Files: `projects/crypto-monitoring/kraken/predictions.json`, `performance.json`
 
 ## Priority 3
-**YNAI5 World Channel — Suno Music Content**
-- On hold until Distrokid purchased for YouTube music distribution
-- Strategy: AI music (Suno) + AI stories + AI news = main channel brand
-- Main files: `projects/social-media-automation/strategy.md`
+**Social Media Pipeline — ON HOLD**
+- Blocked by laptop hardware (no local video gen, 8GB RAM)
+- Resume when: MacBook arrives OR cloud-only video pipeline is viable
+- Files preserved at: `projects/social-media-automation/`
 
 ---
 
 ## Active Focus Areas This Month
-- Social media automation: niche research → content pipeline → first uploads
-- Crypto monitoring: watchlist active, trade journal started
-- Content tracker operational (Claude manages it as a spreadsheet)
+- Crypto/stock screening: find high-probability setups using /crypto-screen + /stock-screen
+- Portfolio recovery: analyze underwater positions (ETH -30%, SOL -40%, BTC -21%) — DCA or cut?
+- Prediction tracking: build accuracy data to validate AI analysis quality
+- Morning briefing: live at 9AM AST via GitHub Actions
 
 ## On Hold / Backburner
-- GitHub push (when local structure is stable)
-- Suno/Distrokid YouTube music distribution (waiting on Distrokid purchase)
-- Side business (after initial revenue established)
+- Social media automation pipeline (hardware blocker)
+- Suno/Distrokid YouTube music distribution (waiting on hardware + Distrokid)
+- Video production pipeline (waiting on MacBook)
 
 ## Completed This Month
 - [2026-03-09] Planned and approved full workspace architecture

@@ -1,32 +1,32 @@
 # Current Session State
-_Auto-updated by session-backup.py at 2026-03-18 14:07:05 (trigger: stop)_
+_Auto-updated by session-backup.py at 2026-03-18 18:35:07 (trigger: stop)_
 
 ## Last Session Context
 
-Session backup from 2026-03-18 14:07:05 (trigger: stop).
+Session backup from 2026-03-18 18:35:07 (trigger: stop).
 Workspace: C:/Users/shema/OneDrive/Desktop/YNAI5-SU
 
 --- CURRENT PRIORITIES ---
 # Current Priorities
 _Update this file monthly or whenever focus shifts. Claude checks this at every session start._
 
-Last Updated: 2026-03-09
+Last Updated: 2026-03-18
 
 ## Top Priority (Most Urgent)
-**AI Social Media Automation Pipeline — Revenue Generation**
-- Build automated niche finder → content idea generator → video/content production → upload workflow
-- Goal: first revenue from YouTube/TikTok/Instagram ASAP
-- Blocker: niche not fully defined yet — research + decide before building pipeline
-- Main files: `projects/social-media-automation/`, `projects/social-media-automation/content-tracker.md`
+**Crypto & Stock Trading — Capital Growth**
+- Laptop hardware limits video production — social media pipeline paused until better hardware
+- Focus: grow capital through smart crypto/stock plays using the full finance skills suite
+- Current Kraken positions are mostly dust/underwater — need strategy to recover and build
+- Tools ready: /crypto-screen, /crypto-portfolio, /technical-analysis, /portfolio-strategy, /risk-analyze
+- Daily habit: morning briefing (9AM AST auto) → scan opportunities → log predictions → track accuracy
 
 ## Priority 2
-**Crypto Portfolio Monitoring + Alerts**
-- Watchlist is live with current Revolut + Kraken holdings
-- Next: get /market-check alerts flowing, build trade evaluation habit via Ledger Node
-- Main files: `projects/crypto-monitoring/watchlist.md`, `projects/crypto-monitoring/trade-journal.md`
+**Prediction Feedback Loop — Build Edge**
+- Log every trade idea as a prediction via /crypto-portfolio --predict
+- Score outcomes weekly → find where Claude's analysis is most accurate
+- Goal: 70%+ accuracy over 20 predictions before scaling position sizes
+- Files: `projects/crypto-monitoring/kraken/predictions.json`, `performance.json`
 
-## Priority 3
-**YNAI5 World Channel — Suno Music Content**
 
 --- OPEN ACTIONS ---
 [gmail-triage-pending.md] # Gmail Triage Pending
