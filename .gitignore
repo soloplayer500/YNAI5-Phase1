@@ -16,6 +16,25 @@ desktop.ini
 # Audio output (generated files — don't commit MP3s)
 projects/social-media-automation/audio/*.mp3
 
+# Video files — too large for GitHub (use cloud storage)
+*.mp4
+*.mov
+*.avi
+*.mkv
+projects/social-media-automation/footage/
+projects/social-media-automation/output/
+
+# Python cache / bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Log files (auto-generated, noisy)
+projects/social-media-automation/pipeline/pipeline.log
+tools/inbox_manager.log
+tools/tasks.log
+projects/system-health/logs/
+
 # Keep folder structure in git
 !**/.gitkeep
 nul
