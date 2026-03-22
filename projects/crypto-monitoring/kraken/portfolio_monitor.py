@@ -86,6 +86,14 @@ KRAKEN_ASSET_MAP = {
     "USDT": "tether",        "USDC": "usd-coin",
 }
 
+# Kraken asset code → clean display symbol (handles double-X prefix like XXBT → BTC)
+KRAKEN_DISPLAY_SYMBOL = {
+    "XXBT": "BTC", "XBT": "BTC", "XBTC": "BTC",
+    "XETH": "ETH",
+    "XSOL": "SOL",
+    "XBCH": "BCH",
+}
+
 # Known avg buy prices (update as positions change)
 AVG_BUY = {
     "bitcoin":        90111.0,
@@ -244,7 +252,7 @@ def get_account_balance(prices: dict = None) -> dict:
 
         balances.append({
             "asset":          asset,
-            "symbol":         asset.lstrip("X").rstrip("Z") if len(asset) > 3 else asset,
+            "symbol":         KRAKEN_DISPLAY_SYMBOL.get(asset, asset.lstrip("X").rstrip("Z") if len(asset) > 3 else asset),
             "coingecko_id":   cg_id,
             "qty":            qty,
             "price_usd":      price_usd,
