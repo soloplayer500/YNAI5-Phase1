@@ -33,8 +33,8 @@ ENV_PATH    = HERE.parent.parent / ".env.local"
 LOG_DIR     = HERE / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
-FREE_CHANNEL  = "@BlockSyndicate_bot"    # public discovery channel
-VIP_CHANNEL   = "@BlockSyndicatevip_bot" # paid premium channel
+FREE_CHANNEL  = "-1003860200579"   # Block Syndicate (free/discovery)
+VIP_CHANNEL   = "-1003689725571"   # Block Syndicate VIP (paid)
 
 SEP = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
