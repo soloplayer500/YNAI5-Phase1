@@ -16,21 +16,22 @@ _Date: 2026-03-22 | Deadline: 2026-03-29_
 - [ ] Test: run manually → verify Telegram receives formatted signal cards
 
 ## Day 2–3: Gumroad Payment Setup (User does this — 10 min)
-- [ ] Create Gumroad account at gumroad.com (free)
+- [x] Create Gumroad account at gumroad.com (free) ✅ Done 2026-03-22
 - [ ] Create product: "Solo's Daily Crypto + Stock Signals" — $9.99/month subscription
 - [ ] Set delivery: paste private Telegram channel invite link as download content
 - [ ] Add payment link to free channel description + pinned post
 
 ## Day 3–4: Reddit Distribution (Claude drafts all posts)
-- [ ] Join: r/CryptoCurrency, r/SatoshiStreetBets, r/Altcoin, r/CryptoMarkets, r/Binance
+- [x] Join: r/CryptoCurrency, r/CryptoMarkets ✅ Done 2026-03-22
+- [ ] Also join: r/SatoshiStreetBets, r/Altcoin, r/Binance
 - [ ] Observe top posts for 24 hours (understand format, tone, rules)
 - [ ] Claude generates 10 ready-to-paste Reddit signal posts (different tickers)
 - [ ] Post 2 per day, Monday/Wednesday/Friday cadence
 - [ ] Format: "[SIGNAL] TICKER — Entry: $X | Stop: $Y | Target: $Z | 2:1 R/R"
 
 ## Day 4–5: Twitter/X Setup (Claude drafts all content)
-- [ ] Create Twitter/X account: @SoloSignals or @SoloClaude
-- [ ] Bio: "Crypto + Stock signals daily | AI-powered analysis | Free alerts ↓"
+- [x] Twitter/X account already exists ✅
+- [ ] Update bio: "Crypto + Stock signals daily | AI-powered analysis | Free alerts ↓ [Telegram link]"
 - [ ] Claude generates 20 thread outlines (carousel format: setup → entry → stop → thesis)
 - [ ] Post 1–2 threads/day
 - [ ] Add Telegram free channel link in bio
