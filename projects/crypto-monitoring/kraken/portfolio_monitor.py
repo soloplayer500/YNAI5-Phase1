@@ -455,11 +455,10 @@ def _fmt_price(price: float) -> str:
 
 def _send_telegram_push(portfolio: dict):
     """
-    Smart push — only fires on two triggers:
-      1. BIG MOVE: any held asset moves >5% in 24h (max 1 alert per asset per 4h)
-      2. SCHEDULED: 9AM AST (13:00 UTC) or 3PM AST (19:00 UTC) windows — handled
-         by market-report.py. This function handles ALERT mode only.
-    Routine 30-min syncs are SILENT (data saved to JSON, no Telegram).
+    Smart push — only fires when any held asset moves >5% in 24h
+    (max 1 alert per asset per 4h cooldown). Routine 30-min syncs are
+    SILENT (data saved to JSON only). Sends a clean executive briefing
+    format — no channel branding.
     """
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         print("[Telegram] Not configured — skipping")
@@ -471,7 +470,7 @@ def _send_telegram_push(portfolio: dict):
     state    = _load_alert_state()
 
     # ── Find big movers not recently alerted ──────────────────────────────────
-    big_movers = []
+    big_movers = set()
     for b in balances:
         ch24 = b.get("change_24h_pct")
         if ch24 is None or abs(ch24) < BIG_MOVE_THRESHOLD:
@@ -486,7 +485,7 @@ def _send_telegram_push(portfolio: dict):
                     continue  # already alerted recently
             except Exception:
                 pass
-        big_movers.append(b)
+        big_movers.add(sym)
 
     if not big_movers:
         print("[Telegram] No big moves detected — silent sync")
@@ -494,76 +493,113 @@ def _send_telegram_push(portfolio: dict):
 
     # ── Update alert state ───────────────────────────────────────────────────
     ts = now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-    for b in big_movers:
-        sym = b.get("symbol", b["asset"])
+    for sym in big_movers:
         state[f"big_move_{sym}"] = ts
     _save_alert_state(state)
 
-    # ── Build professional ALERT card ────────────────────────────────────────
-    time_ast = (now_utc.hour - 4) % 24
-    ampm     = "AM" if time_ast < 12 else "PM"
-    hour12   = time_ast % 12 or 12
-    time_s   = f"{hour12}:{now_utc.strftime('%M')} {ampm} AST"
+    # ── Time string — AST (UTC-4) ─────────────────────────────────────────────
+    ast_dt   = datetime.fromtimestamp(now_utc.timestamp() - 4 * 3600, tz=timezone.utc)
+    day_s    = ast_dt.strftime("%a %b") + f" {ast_dt.day}"  # e.g. Mon Mar 24 (cross-platform)
+    hour12   = int(ast_dt.strftime("%I"))
+    min_s    = ast_dt.strftime("%M")
+    ampm     = ast_dt.strftime("%p")
+    time_s   = f"{day_s}  ·  {hour12}:{min_s} {ampm} AST"
 
-    SEP_BOLD  = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     SEP_LIGHT = "─────────────────────────────"
 
+    # ── HEADER ────────────────────────────────────────────────────────────────
     lines = [
-        SEP_BOLD,
-        f"⚡ <b>PRICE ALERT</b>  ·  {time_s}",
-        SEP_BOLD,
+        f"<b>📋 PORTFOLIO BRIEF</b>  ·  {time_s}",
         "",
     ]
 
-    for b in big_movers:
-        sym   = b.get("symbol", b["asset"])
-        price = b.get("current_price") or b["usd_value"] / b["qty"] if b["qty"] > 0 else 0
-        ch24  = b.get("change_24h_pct", 0)
-        pnl   = b.get("pnl_pct")
-        arrow = "▲" if ch24 >= 0 else "▼"
-        dot   = "🟢" if ch24 >= 0 else "🔴"
-
-        pnl_s = ""
-        if pnl is not None:
-            pnl_dot = "🟢" if pnl >= 0 else "🔴"
-            pnl_s   = f"  {pnl_dot} {'+' if pnl >= 0 else ''}{pnl:.1f}% vs entry"
-
-        lines.append(
-            f"<b>{sym}</b>  {_fmt_price(price)}  {dot} {arrow}{abs(ch24):.1f}% 24h{pnl_s}"
-        )
-
-    lines += ["", SEP_LIGHT, ""]
-
-    # Portfolio snapshot
+    # Net worth
     total = p["total_usd"]
-    lines.append(f"💼 <b>PORTFOLIO</b>  ·  <b>${total:,.0f}</b> total")
+    lines.append(f"Net Worth (tracked):  <b>${total:,.0f}</b>")
     lines.append("")
-    for b in balances[:6]:
+
+    # ── HOLDINGS ─────────────────────────────────────────────────────────────
+    lines.append(f"<b>HOLDINGS</b>")
+    for b in balances:
         sym   = b.get("symbol", b["asset"])
-        val   = b["usd_value"]
+        qty   = b.get("qty", 0)
+        price = (b["usd_value"] / qty) if qty and qty > 0 else b.get("price_usd", 0) or 0
         ch24  = b.get("change_24h_pct")
         pnl   = b.get("pnl_pct")
 
-        pnl_dot = "🟢" if (pnl or 0) >= 0 else "🔴"
-        pnl_s   = f"{pnl_dot} {'+' if (pnl or 0) >= 0 else ''}{pnl:.0f}%" if pnl is not None else "⚪"
+        price_s = _fmt_price(price)
 
         if ch24 is not None:
-            ch_s = f"{'▲' if ch24 >= 0 else '▼'}{abs(ch24):.1f}%"
-            bang = "  ⚡" if abs(ch24) >= BIG_MOVE_THRESHOLD else ""
+            arrow = "▲" if ch24 >= 0 else "▼"
+            ch_s  = f"{arrow} {abs(ch24):.1f}%"
         else:
-            ch_s, bang = "", ""
+            ch_s  = "─"
 
-        lines.append(f"  <b>{sym:<6}</b>  ${val:>6,.0f}  {pnl_s:<10}  {ch_s}{bang}")
+        if pnl is not None:
+            pnl_dot = "🟢" if pnl >= 0 else "🔴"
+            sign    = "+" if pnl >= 0 else ""
+            pnl_s   = f"  ·  {pnl_dot} {sign}{pnl:.0f}% vs entry"
+        else:
+            pnl_s = ""
 
-    if p.get("stablecoins_usd", 0) > 0:
-        lines.append(f"  💵 Stable  ${p['stablecoins_usd']:,.0f}")
+        bang = "  ⚡" if sym in big_movers else ""
 
-    lines += [
-        "",
-        SEP_BOLD,
-        "📌 <b>Free signals</b> → @BlockSyndicateFree",
-        "💎 <b>VIP setups</b>  → @BlockSyndicateVip",
-    ]
+        lines.append(f"{sym:<6}  {price_s:<10}  {ch_s:<8}{pnl_s}{bang}")
+
+    lines.append("")
+    lines.append(SEP_LIGHT)
+    lines.append("")
+
+    # ── MARKET SNAPSHOT ───────────────────────────────────────────────────────
+    lines.append(f"<b>MARKET SNAPSHOT</b>")
+
+    # Top mover by abs 24h %
+    movers_with_ch = [(b.get("symbol", b["asset"]), b.get("change_24h_pct")) for b in balances if b.get("change_24h_pct") is not None]
+    btc_ch = next((ch for sym, ch in movers_with_ch if sym == "BTC"), None)
+
+    if movers_with_ch:
+        top_sym, top_ch = max(movers_with_ch, key=lambda x: abs(x[1]))
+        top_arrow = "▲" if top_ch >= 0 else "▼"
+        top_s = f"Top mover: {top_sym} {top_arrow} {abs(top_ch):.1f}%"
+        if btc_ch is not None and top_sym != "BTC":
+            btc_arrow = "▲" if btc_ch >= 0 else "▼"
+            top_s += f"  ·  BTC {btc_arrow} {abs(btc_ch):.1f}%"
+        lines.append(top_s)
+
+    green = sum(1 for _, ch in movers_with_ch if ch >= 0)
+    red   = sum(1 for _, ch in movers_with_ch if ch < 0)
+    total_w = green + red
+    if total_w > 0:
+        tone = "Bullish" if green > red else "Bearish" if red > green else "Mixed"
+        lines.append(f"Tone: {tone}  ·  {green}🟢 {red}🔴 across holdings")
+
+    lines.append("")
+    lines.append(SEP_LIGHT)
+    lines.append("")
+
+    # ── ORDERS ────────────────────────────────────────────────────────────────
+    lines.append(f"<b>ORDERS</b>")
+    open_orders   = p.get("open_orders", [])
+    recent_trades = p.get("recent_trades", [])
+
+    if open_orders:
+        for o in open_orders[:3]:
+            pair  = o.get("pair", "")
+            otype = o.get("type", "").upper()
+            price = o.get("price", 0)
+            lines.append(f"{otype} {pair} @ ${price:,.2f}  (open)")
+    else:
+        last_s = ""
+        if recent_trades:
+            t     = recent_trades[0]
+            ttype = t.get("type", "").upper()
+            tpair = t.get("pair", "")
+            tpx   = t.get("price_executed", 0)
+            tdate = t.get("closed_at", "")[:10] if t.get("closed_at") else ""
+            last_s = f"  ·  Last: {ttype} {tpair} @ ${tpx:,.0f}"
+            if tdate:
+                last_s += f" · {tdate}"
+        lines.append(f"No open orders{last_s}")
 
     msg = "\n".join(lines)
     if len(msg) > 4000:
@@ -582,7 +618,7 @@ def _send_telegram_push(portfolio: dict):
         )
         with urllib.request.urlopen(req, timeout=10):
             pass
-        movers_s = ", ".join(b.get("symbol", b["asset"]) for b in big_movers)
+        movers_s = ", ".join(sorted(big_movers))
         print(f"[Telegram] ✓ Alert sent — big movers: {movers_s}")
     except Exception as e:
         print(f"[Telegram] Failed: {e}")
