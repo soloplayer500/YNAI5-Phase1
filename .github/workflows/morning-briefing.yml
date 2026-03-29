@@ -1,9 +1,7 @@
 name: YNAI5 Morning Briefing
 
 on:
-  schedule:
-    # 9:00 AM AST = 13:00 UTC daily
-    - cron: '0 13 * * *'
+  # schedule: PAUSED 2026-03-29 — re-enable when Telegram alerts wanted again
   workflow_dispatch:  # Manual trigger for testing
 
 jobs:

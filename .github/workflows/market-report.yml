@@ -1,10 +1,7 @@
 name: YNAI5 Market Reports
 
 on:
-  schedule:
-    # AST = UTC-4 · Morning briefing + Afternoon check only
-    - cron: '0 13 * * *'   # 9:00 AM AST  (13:00 UTC)
-    - cron: '0 19 * * *'   # 3:00 PM AST  (19:00 UTC)
+  # schedule: PAUSED 2026-03-29 — re-enable when Telegram alerts wanted again
   workflow_dispatch:        # Manual trigger from GitHub Actions tab
 
 jobs:
