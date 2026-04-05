@@ -16,7 +16,7 @@
 
 ## Workspace Map
 ```
-YNAI5-SU/
+YNAI5-Phase1/
 ├── CLAUDE.md                              ← This file (master)
 ├── context/
 │   ├── profile.md                         ← Who Shami is
@@ -139,6 +139,7 @@ _These govern how I approach ALL tasks — from simple questions to complex buil
 - `/prompt-gen [platform] [type] [subject] [style]` — structured 8-layer AI video/image prompt generation
 - `/trend-check [platform]` — today's top 5 trending AI topics with virality scores + TikTok angles → trends/
 - `/content-gen [topic] [platform]` — full TikTok/YT/IG script (hook + body + CTA + captions + hashtags + B-roll keywords) → scripts/
+- `/content-batch [niche?]` — daily batch dispatch: 2 scripts + voice + Kling video + B-roll in parallel → queue/YYYY-MM-DD/
 - `/script-gen [topic] [platform]` — 3 A/B script variations with scoring + recommendation → scripts/
 - `/niche-finder [seed keyword]` — deep niche research table (RPM, competition, automation score) → niche-research/
 - `/video-plan [script-file]` — shot-by-shot director breakdown (Pexels terms, text overlays, timing, YNAI5 brand notes) → video-plans/
