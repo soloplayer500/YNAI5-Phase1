@@ -1,0 +1,22 @@
+[Unit]
+Description=YNAI5 Google Drive Mount (rclone)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=shema
+ExecStart=/usr/bin/rclone mount gdrive:/YNAI5_AI_CORE /mnt/gdrive \
+  --vfs-cache-mode full \
+  --vfs-cache-max-size 2G \
+  --allow-other \
+  --daemon-timeout 60s \
+  --log-level INFO \
+  --log-file /ynai5_runtime/logs/rclone-drive.log
+ExecStop=/bin/fusermount -u /mnt/gdrive
+Restart=always
+RestartSec=15
+KillMode=process
+
+[Install]
+WantedBy=default.target

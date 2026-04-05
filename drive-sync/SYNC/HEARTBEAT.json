@@ -1,0 +1,21 @@
+{
+  "system": "YNAI5-Phase1",
+  "status": "idle",
+  "active_agent": null,
+  "task_queue": [],
+  "last_update": null,
+  "vm_status": {
+    "running": false,
+    "last_seen": null,
+    "uptime_seconds": 0,
+    "ip": null
+  },
+  "last_task_result": null,
+  "errors": [],
+  "stats": {
+    "tasks_completed": 0,
+    "tasks_failed": 0,
+    "gemini_calls": 0,
+    "claude_calls": 0
+  }
+}

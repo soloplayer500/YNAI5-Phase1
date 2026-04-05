@@ -1,0 +1,18 @@
+[Unit]
+Description=YNAI5 Claude Runner
+After=ynai5-drive.service network-online.target
+Requires=ynai5-drive.service
+
+[Service]
+Type=simple
+User=shema
+WorkingDirectory=/ynai5_runtime
+EnvironmentFile=/ynai5_runtime/.env
+ExecStart=/usr/bin/python3 /ynai5_runtime/scripts/claude_runner.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/ynai5_runtime/logs/claude_runner.log
+StandardError=append:/ynai5_runtime/logs/claude_runner.log
+
+[Install]
+WantedBy=multi-user.target

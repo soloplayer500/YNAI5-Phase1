@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YNAI5-Phase1 | AI Control Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #080b0f;
+    --bg2: #0d1117;
+    --bg3: #161b22;
+    --border: #21262d;
+    --cyan: #00f5ff;
+    --purple: #8b5cf6;
+    --green: #3fb950;
+    --orange: #f78166;
+    --yellow: #e3b341;
+    --text: #c9d1d9;
+    --text-dim: #6e7681;
+    --glow-cyan: 0 0 20px rgba(0,245,255,0.15);
+    --glow-purple: 0 0 20px rgba(139,92,246,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    color: var(--purple);
+    text-shadow: var(--glow-purple);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  .status-dot.offline { background: var(--orange); box-shadow: 0 0 8px var(--orange); animation: none; }
+  .status-dot.working { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 0.5s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-dim);
+    font-size: 11px;
+  }
+
+  .refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--cyan);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+
+  .main {
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: #30363d; }
+
+  .card.cyan-accent { border-top: 2px solid var(--cyan); }
+  .card.purple-accent { border-top: 2px solid var(--purple); }
+  .card.green-accent { border-top: 2px solid var(--green); }
+  .card.orange-accent { border-top: 2px solid var(--orange); }
+
+  .card-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  /* VM Metrics */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .metric {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .metric-label { font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+  .metric-value { font-size: 22px; font-weight: 700; }
+  .metric-value.cyan { color: var(--cyan); }
+  .metric-value.purple { color: var(--purple); }
+  .metric-value.green { color: var(--green); }
+  .metric-value.yellow { color: var(--yellow); }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .progress-fill.cyan { background: var(--cyan); }
+  .progress-fill.purple { background: var(--purple); }
+  .progress-fill.yellow { background: var(--yellow); }
+  .progress-fill.orange { background: var(--orange); }
+
+  /* Heartbeat Status */
+  .hb-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .hb-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hb-badge.idle { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+  .hb-badge.working { background: rgba(227,179,65,0.15); color: var(--yellow); border: 1px solid rgba(227,179,65,0.3); }
+  .hb-badge.offline { background: rgba(247,129,102,0.15); color: var(--orange); border: 1px solid rgba(247,129,102,0.3); }
+  .hb-badge.error { background: rgba(247,129,102,0.15); color: var(--orange); border: 1px solid rgba(247,129,102,0.3); }
+
+  .hb-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .hb-detail span { color: var(--text); }
+
+  /* Services */
+  .service-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .service-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: var(--bg3);
+    border-radius: 5px;
+  }
+
+  .service-name { color: var(--text); font-size: 12px; }
+  .service-status {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .service-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
+  .service-status.inactive { background: rgba(247,129,102,0.15); color: var(--orange); }
+  .service-status.unknown { background: rgba(110,118,129,0.15); color: var(--text-dim); }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .stat-box {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .stat-number { font-size: 28px; font-weight: 700; color: var(--cyan); }
+  .stat-label { font-size: 10px; color: var(--text-dim); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Task Queue */
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .task-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .task-agent {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .task-agent.gemini { background: rgba(0,245,255,0.15); color: var(--cyan); }
+  .task-agent.claude { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+  .task-command { color: var(--text); font-size: 11px; line-height: 1.5; flex: 1; }
+  .task-id { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+  .task-delete {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .task-delete:hover { color: var(--orange); }
+
+  .no-tasks {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 20px;
+    font-size: 11px;
+  }
+
+  /* Last Result */
+  .result-box {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--text);
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .result-meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  /* Task Form */
+  .form-card {
+    grid-column: 1 / -1;
+  }
+
+  .task-form {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .form-textarea {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-textarea:focus { outline: none; border-color: var(--cyan); }
+  .form-textarea::placeholder { color: var(--text-dim); }
+
+  .form-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 140px;
+  }
+
+  .form-select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 10px;
+    width: 100%;
+  }
+
+  .form-select:focus { outline: none; border-color: var(--purple); }
+
+  .submit-btn {
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    border: none;
+    border-radius: 6px;
+    color: #000;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 16px;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.5px;
+    width: 100%;
+  }
+
+  .submit-btn:hover { opacity: 0.9; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Log viewer */
+  .log-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .log-tab {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+  }
+
+  .log-tab.active { border-color: var(--cyan); color: var(--cyan); }
+
+  .log-box {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    max-height: 180px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .log-line.error { color: var(--orange); }
+  .log-line.info { color: var(--text); }
+
+  /* Drive status */
+  .drive-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .drive-icon { font-size: 16px; }
+
+  .drive-info { flex: 1; }
+  .drive-name { font-size: 12px; color: var(--text); }
+  .drive-path { font-size: 10px; color: var(--text-dim); }
+
+  .drive-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .drive-badge.mounted { background: rgba(63,185,80,0.15); color: var(--green); }
+  .drive-badge.unmounted { background: rgba(247,129,102,0.15); color: var(--orange); }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg3); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    z-index: 9998;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: rgba(63,185,80,0.2); border: 1px solid rgba(63,185,80,0.4); color: var(--green); }
+  .toast.error { background: rgba(247,129,102,0.2); border: 1px solid rgba(247,129,102,0.4); color: var(--orange); }
+
+  @media (max-width: 768px) {
+    .main { padding: 12px; gap: 12px; }
+    .header { padding: 12px 16px; }
+    .task-form { grid-template-columns: 1fr; }
+    .form-right { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="logo">YNAI5<span>-Phase1</span></span>
+    <div class="status-dot" id="statusDot"></div>
+    <span style="color: var(--text-dim); font-size: 11px;" id="systemStatus">connecting...</span>
+  </div>
+  <div class="header-right">
+    <span id="lastUpdate">—</span>
+    <button class="refresh-btn" onclick="fetchStatus()">↻ Refresh</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- VM Metrics -->
+  <div class="card cyan-accent">
+    <div class="card-title">
+      <div class="dot" style="background:var(--cyan)"></div>
+      VM Metrics
+    </div>
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">CPU</div>
+        <div class="metric-value cyan" id="cpu">—%</div>
+        <div class="progress-bar"><div class="progress-fill cyan" id="cpuBar" style="width:0%"></div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">RAM</div>
+        <div class="metric-value purple" id="ram">—%</div>
+        <div class="progress-bar"><div class="progress-fill purple" id="ramBar" style="width:0%"></div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Disk</div>
+        <div class="metric-value yellow" id="disk">—%</div>
+        <div class="progress-bar"><div class="progress-fill yellow" id="diskBar" style="width:0%"></div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Uptime</div>
+        <div class="metric-value green" id="uptime">—h</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heartbeat Status -->
+  <div class="card purple-accent">
+    <div class="card-title">
+      <div class="dot" style="background:var(--purple)"></div>
+      Heartbeat
+    </div>
+    <div class="hb-status">
+      <div class="hb-badge idle" id="hbBadge">idle</div>
+      <span style="color:var(--text-dim);font-size:11px;" id="activeAgent">no active agent</span>
+    </div>
+    <div class="hb-detail" id="hbDetail">
+      Loading...
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div class="card green-accent">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green)"></div>
+      Services
+    </div>
+    <div class="service-list" id="serviceList">
+      <div class="service-row">
+        <span class="service-name">ynai5-drive</span>
+        <span class="service-status unknown" id="svc-drive">—</span>
+      </div>
+      <div class="service-row">
+        <span class="service-name">ynai5-gemini</span>
+        <span class="service-status unknown" id="svc-gemini">—</span>
+      </div>
+      <div class="service-row">
+        <span class="service-name">ynai5-claude</span>
+        <span class="service-status unknown" id="svc-claude">—</span>
+      </div>
+      <div class="service-row">
+        <span class="service-name">ynai5-dashboard</span>
+        <span class="service-status active" id="svc-dashboard">active</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--yellow)"></div>
+      Execution Stats
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-number" id="statDone">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="color:var(--orange)" id="statFailed">0</div>
+        <div class="stat-label">Failed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="color:var(--cyan)" id="statGemini">0</div>
+        <div class="stat-label">Gemini Calls</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="color:var(--purple)" id="statClaude">0</div>
+        <div class="stat-label">Claude Calls</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drive Status -->
+  <div class="card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--cyan)"></div>
+      Google Drive
+    </div>
+    <div class="drive-status">
+      <div class="drive-icon">☁</div>
+      <div class="drive-info">
+        <div class="drive-name">YNAI5_AI_CORE</div>
+        <div class="drive-path">gdrive: → /mnt/gdrive</div>
+      </div>
+      <div class="drive-badge unmounted" id="driveBadge">checking</div>
+    </div>
+    <div class="hb-detail" id="driveDetail">
+      Checking mount status...
+    </div>
+  </div>
+
+  <!-- Last Result -->
+  <div class="card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green)"></div>
+      Last Task Result
+    </div>
+    <div class="result-meta" id="resultMeta">No tasks completed yet</div>
+    <div class="result-box" id="resultBox">Waiting for first task execution...</div>
+  </div>
+
+  <!-- Task Queue -->
+  <div class="card" style="grid-column: span 2;">
+    <div class="card-title">
+      <div class="dot" style="background:var(--purple)"></div>
+      Task Queue
+      <span style="color:var(--text-dim);font-weight:400;" id="queueCount">(0 tasks)</span>
+    </div>
+    <div class="task-list" id="taskList">
+      <div class="no-tasks">No tasks queued</div>
+    </div>
+  </div>
+
+  <!-- Logs -->
+  <div class="card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--text-dim)"></div>
+      Agent Logs
+    </div>
+    <div class="log-tabs">
+      <button class="log-tab active" onclick="switchLog('gemini', this)">Gemini</button>
+      <button class="log-tab" onclick="switchLog('claude', this)">Claude</button>
+    </div>
+    <div class="log-box" id="logBox">Loading logs...</div>
+  </div>
+
+  <!-- Dispatch Task -->
+  <div class="card form-card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--cyan)"></div>
+      Dispatch Task
+    </div>
+    <div class="task-form">
+      <textarea class="form-textarea" id="taskCommand" placeholder="Enter command or prompt for the AI agent...
+Examples:
+• Analyze today's crypto market conditions
+• Run /crypto-screen and summarize top 3 setups
+• Check if BTC is likely to test $70K this week"></textarea>
+      <div class="form-right">
+        <select class="form-select" id="taskAgent">
+          <option value="gemini">→ Gemini</option>
+          <option value="claude">→ Claude</option>
+        </select>
+        <button class="submit-btn" onclick="submitTask()" id="submitBtn">DISPATCH</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentLogTab = 'gemini';
+let autoRefreshInterval;
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+async function fetchStatus() {
+  try {
+    const res = await fetch('/api/status');
+    const data = await res.json();
+    updateDashboard(data);
+  } catch (e) {
+    document.getElementById('systemStatus').textContent = 'connection failed';
+    document.getElementById('statusDot').className = 'status-dot offline';
+  }
+}
+
+function updateDashboard(data) {
+  // Header
+  const hbStatus = data.heartbeat?.status || 'offline';
+  const dot = document.getElementById('statusDot');
+  const sysStatus = document.getElementById('systemStatus');
+  dot.className = `status-dot ${hbStatus === 'working' ? 'working' : hbStatus === 'idle' ? '' : 'offline'}`;
+  sysStatus.textContent = hbStatus;
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+
+  // VM metrics
+  if (data.vm && !data.vm.error) {
+    const cpu = data.vm.cpu_percent?.toFixed(1) || 0;
+    const ram = data.vm.ram_percent?.toFixed(1) || 0;
+    const disk = data.vm.disk_percent?.toFixed(1) || 0;
+    document.getElementById('cpu').textContent = `${cpu}%`;
+    document.getElementById('ram').textContent = `${ram}%`;
+    document.getElementById('disk').textContent = `${disk}%`;
+    document.getElementById('uptime').textContent = `${data.vm.uptime_hours || 0}h`;
+    document.getElementById('cpuBar').style.width = `${cpu}%`;
+    document.getElementById('ramBar').style.width = `${ram}%`;
+    document.getElementById('diskBar').style.width = `${disk}%`;
+    // Color disk bar based on usage
+    const diskFill = document.getElementById('diskBar');
+    diskFill.className = `progress-fill ${disk > 80 ? 'orange' : 'yellow'}`;
+  }
+
+  // Heartbeat
+  const hb = data.heartbeat || {};
+  const badge = document.getElementById('hbBadge');
+  badge.textContent = hbStatus;
+  badge.className = `hb-badge ${hbStatus}`;
+  document.getElementById('activeAgent').textContent = hb.active_agent ? `→ ${hb.active_agent}` : 'no active agent';
+  const vmSeen = hb.vm_status?.last_seen ? new Date(hb.vm_status.last_seen).toLocaleTimeString() : 'never';
+  const lastUpd = hb.last_update ? new Date(hb.last_update).toLocaleTimeString() : 'never';
+  document.getElementById('hbDetail').innerHTML =
+    `<span>Last Update:</span> ${lastUpd}<br>` +
+    `<span>VM Last Seen:</span> ${vmSeen}<br>` +
+    `<span>Queue Size:</span> ${hb.task_queue?.length || 0} tasks`;
+
+  // Services
+  if (data.services) {
+    for (const [name, status] of Object.entries(data.services)) {
+      const el = document.getElementById(`svc-${name.replace('ynai5-', '')}`);
+      if (el) {
+        el.textContent = status;
+        el.className = `service-status ${status === 'active' ? 'active' : status === 'inactive' ? 'inactive' : 'unknown'}`;
+      }
+    }
+  }
+
+  // Stats
+  const stats = hb.stats || {};
+  document.getElementById('statDone').textContent = stats.tasks_completed || 0;
+  document.getElementById('statFailed').textContent = stats.tasks_failed || 0;
+  document.getElementById('statGemini').textContent = stats.gemini_calls || 0;
+  document.getElementById('statClaude').textContent = stats.claude_calls || 0;
+
+  // Drive
+  const driveBadge = document.getElementById('driveBadge');
+  const driveDetail = document.getElementById('driveDetail');
+  if (data.drive_mounted) {
+    driveBadge.textContent = 'mounted';
+    driveBadge.className = 'drive-badge mounted';
+    driveDetail.innerHTML = '<span style="color:var(--green)">✓</span> YNAI5_AI_CORE accessible at /mnt/gdrive';
+  } else {
+    driveBadge.textContent = 'unmounted';
+    driveBadge.className = 'drive-badge unmounted';
+    driveDetail.innerHTML = '<span style="color:var(--orange)">⚠</span> Drive not mounted — run: systemctl start ynai5-drive';
+  }
+
+  // Task Queue
+  const queue = hb.task_queue || [];
+  const queueEl = document.getElementById('taskList');
+  document.getElementById('queueCount').textContent = `(${queue.length} task${queue.length !== 1 ? 's' : ''})`;
+  if (queue.length === 0) {
+    queueEl.innerHTML = '<div class="no-tasks">Queue is empty — dispatch a task below</div>';
+  } else {
+    queueEl.innerHTML = queue.map(t => `
+      <div class="task-item">
+        <span class="task-agent ${t.assigned_to}">${t.assigned_to}</span>
+        <div style="flex:1">
+          <div class="task-command">${escHtml(t.command)}</div>
+          <div class="task-id">#${t.id} · ${new Date(t.created_at).toLocaleTimeString()}</div>
+        </div>
+        <button class="task-delete" onclick="deleteTask('${t.id}')" title="Remove task">×</button>
+      </div>
+    `).join('');
+  }
+
+  // Last result
+  const result = hb.last_task_result;
+  if (result) {
+    document.getElementById('resultMeta').innerHTML =
+      `Task <span style="color:var(--cyan)">#${result.task_id}</span> · ` +
+      `<span style="color:var(--${result.agent === 'gemini' ? 'cyan' : 'purple'})">${result.agent}</span> · ` +
+      `${new Date(result.completed_at).toLocaleTimeString()}`;
+    document.getElementById('resultBox').textContent = result.result;
+  }
+
+  // Load logs
+  fetchLogs(currentLogTab);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function fetchLogs(agent) {
+  try {
+    const res = await fetch(`/api/logs/${agent}`);
+    const data = await res.json();
+    const box = document.getElementById('logBox');
+    box.innerHTML = data.logs.map(l =>
+      `<div class="log-line ${l.includes('ERROR') ? 'error' : 'info'}">${escHtml(l)}</div>`
+    ).join('');
+    box.scrollTop = box.scrollHeight;
+  } catch (e) {
+    document.getElementById('logBox').textContent = 'Failed to load logs';
+  }
+}
+
+function switchLog(tab, btn) {
+  currentLogTab = tab;
+  document.querySelectorAll('.log-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fetchLogs(tab);
+}
+
+async function submitTask() {
+  const command = document.getElementById('taskCommand').value.trim();
+  const agent = document.getElementById('taskAgent').value;
+  if (!command) { showToast('Enter a command first', 'error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'DISPATCHING...';
+
+  try {
+    const res = await fetch('/api/task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command, assigned_to: agent, priority: 1, context: '' })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(`Task #${data.task_id} dispatched to ${agent}`, 'success');
+      document.getElementById('taskCommand').value = '';
+      fetchStatus();
+    } else {
+      showToast(data.detail || 'Failed to dispatch', 'error');
+    }
+  } catch (e) {
+    showToast('Network error — is VM reachable?', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'DISPATCH';
+  }
+}
+
+async function deleteTask(id) {
+  try {
+    const res = await fetch(`/api/task/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      showToast(`Task #${id} removed`, 'success');
+      fetchStatus();
+    }
+  } catch (e) {
+    showToast('Failed to delete task', 'error');
+  }
+}
+
+// Auto-refresh every 10 seconds
+fetchStatus();
+autoRefreshInterval = setInterval(fetchStatus, 10000);
+
+// Handle visibility change — pause refresh when tab hidden
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    clearInterval(autoRefreshInterval);
+  } else {
+    fetchStatus();
+    autoRefreshInterval = setInterval(fetchStatus, 10000);
+  }
+});
+</script>
+</body>
+</html>
