@@ -1,0 +1,34 @@
+[Unit]
+Description=YNAI5 Health Monitor — Phase 1
+Documentation=https://github.com/soloplayer500/YNAI5-SU
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=shema
+WorkingDirectory=/opt/health-monitor
+
+ExecStart=/usr/bin/python3 /opt/health-monitor/main.py
+
+# Always restart on failure — systemd is the self-healing layer
+Restart=always
+RestartSec=5
+
+# Telegram credentials — set these before enabling the service
+# (alternatively, put them in ~/.env.local and leave blank here)
+Environment=TELEGRAM_BOT_TOKEN=
+Environment=TELEGRAM_CHAT_ID=
+
+# Watchdog: if the process stops reporting heartbeat within 120s, systemd kills+restarts it
+# (requires sd_notify integration for full watchdog — currently logs stall to monitor.log)
+WatchdogSec=120
+
+# Log to journald (view with: journalctl -u health-monitor -f)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=health-monitor
+
+[Install]
+WantedBy=multi-user.target

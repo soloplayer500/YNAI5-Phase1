@@ -1,0 +1,10 @@
+{
+  "cpu": {
+    "state": "OK",
+    "last_alert": null
+  },
+  "ram": {
+    "state": "WARNING",
+    "last_alert": "2026-04-12T20:12:40.180981+00:00"
+  }
+}

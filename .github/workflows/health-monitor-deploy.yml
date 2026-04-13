@@ -1,0 +1,83 @@
+name: Deploy Health Monitor to VM
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'health-monitor/**'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force redeploy even without code changes'
+        required: false
+        default: 'false'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy health-monitor to VM
+        env:
+          VM_IP: ${{ secrets.VM_IP }}
+          VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          echo "$VM_SSH_KEY" > /tmp/vm_key && chmod 600 /tmp/vm_key
+
+          SSH="ssh -i /tmp/vm_key -o StrictHostKeyChecking=no shema@$VM_IP"
+          RSYNC="rsync -avz --exclude='*.pyc' --exclude='__pycache__' --exclude='state/' --exclude='logs/' --exclude='.env.local' -e 'ssh -i /tmp/vm_key -o StrictHostKeyChecking=no'"
+
+          echo "==> Creating /opt/health-monitor on VM..."
+          $SSH "sudo mkdir -p /opt/health-monitor && sudo chown shema:shema /opt/health-monitor"
+
+          echo "==> Syncing health-monitor files..."
+          rsync -avz \
+            --exclude='*.pyc' --exclude='__pycache__' \
+            --exclude='state/' --exclude='logs/' --exclude='.env.local' \
+            --exclude='config_win.yaml' --exclude='main_win.py' \
+            --exclude='watcher.vbs' --exclude='install_windows.bat' \
+            -e "ssh -i /tmp/vm_key -o StrictHostKeyChecking=no" \
+            health-monitor/ \
+            shema@$VM_IP:/opt/health-monitor/
+
+          echo "==> Installing Python dependencies..."
+          $SSH "pip3 install -q -r /opt/health-monitor/requirements.txt"
+
+          echo "==> Creating .env.local on VM with Telegram credentials..."
+          $SSH "cat > /opt/health-monitor/.env.local << 'ENVEOF'
+          TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
+          TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
+          ENVEOF"
+
+          echo "==> Creating state and logs directories..."
+          $SSH "mkdir -p /opt/health-monitor/state /opt/health-monitor/logs"
+
+          echo "==> Installing systemd service..."
+          $SSH "sudo cp /opt/health-monitor/health-monitor.service /etc/systemd/system/health-monitor.service"
+          $SSH "sudo systemctl daemon-reload"
+          $SSH "sudo systemctl enable health-monitor"
+          $SSH "sudo systemctl restart health-monitor"
+
+          echo "==> Checking service status..."
+          sleep 5
+          STATUS=$($SSH "systemctl is-active health-monitor")
+          echo "Service status: $STATUS"
+
+          if [ "$STATUS" = "active" ]; then
+            MSG="✅ health-monitor deployed and running on VM"
+          else
+            JOURNAL=$($SSH "journalctl -u health-monitor -n 10 --no-pager" 2>&1 || true)
+            MSG="❌ health-monitor deploy failed (status: $STATUS)%0A$JOURNAL"
+          fi
+
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=[YNAI5 Deploy] $MSG"
+
+          [ "$STATUS" = "active" ] && exit 0 || exit 1

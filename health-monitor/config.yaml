@@ -1,0 +1,51 @@
+monitor:
+  interval_seconds: 15
+  cooldown_minutes: 10
+  pressure_cycles_threshold: 3      # N consecutive cycles before memory pressure alert
+  swap_growth_cycles: 3             # N consecutive increases before swap alert
+  baseline_window_size: 20          # samples for rolling RAM baseline
+  baseline_deviation_margin: 15.0   # % deviation from baseline to trigger alert
+  stall_detection_cycles: 5         # cycles without success before logging stall
+  top_processes: 10                 # max processes to collect per cycle
+  offender_min_appearances: 3       # appearances in top-N to flag as repeat offender
+
+thresholds:
+  cpu:
+    warning: 75
+    critical: 85
+  ram:
+    warning: 80
+    critical: 90
+  disk:
+    warning: 85
+    critical: 92
+  swap:
+    warning: 50
+    critical: 80
+
+telegram:
+  bot_token: ""     # override — loaded from .env.local TELEGRAM_BOT_TOKEN
+  chat_id: ""       # override — loaded from .env.local TELEGRAM_CHAT_ID
+
+logging:
+  system_log: logs/system.log
+  monitor_log: logs/monitor.log
+
+# ── Phase 2 additions ──────────────────────────────────────────────────────────
+phase2:
+  mode: observe                   # observe | suggest | assist | auto_safe
+  insight_lookback_cycles: 10     # how many recent DB rows to analyze
+  leak_slope_threshold: 2.0       # MB/cycle RAM drop to suspect leak
+  confidence_threshold: 0.6       # minimum confidence to include in alert
+
+safe_process_whitelist:
+  - systemd
+  - bash
+  - sshd
+  - init
+  - python3
+  - python
+
+cooldowns:
+  memory_pressure: 600            # seconds between memory pressure alerts
+  insight_alert: 300              # seconds between insight-derived alerts

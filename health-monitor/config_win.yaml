@@ -1,0 +1,57 @@
+# Windows Laptop Health Monitor — Emergency + Auto-Kill Mode
+# Emergency-only: Telegram fires ONLY at critical thresholds
+# Persistent killer: memory hogs get terminated every cycle
+
+disk_path: "C:\\"
+
+monitor:
+  interval_seconds: 30          # check every 30s (lightweight)
+  cooldown_minutes: 60          # max one Telegram alert per hour per metric
+  top_processes: 10
+  stall_detection_cycles: 10
+
+# Emergency thresholds — WARNING is silent (log only), CRITICAL fires Telegram
+thresholds:
+  cpu:
+    warning: 80                 # logged only
+    critical: 93                # 8GB laptop, sustained spike → alert
+  ram:
+    warning: 82                 # logged only
+    critical: 92                # ~7.4GB used → genuine emergency
+  disk:
+    warning: 88                 # logged only
+    critical: 96                # almost full → alert
+  swap:
+    warning: 60                 # logged only
+    critical: 88                # heavy swapping → alert
+
+# Persistent process killer
+killer:
+  enabled: true
+  kill_threshold_mb: 1200       # any process using >1.2GB gets killed
+  max_kills_per_cycle: 2        # kill at most 2 processes per cycle
+  whitelist:                    # NEVER kill these, no matter what
+    - System
+    - smss.exe
+    - csrss.exe
+    - wininit.exe
+    - winlogon.exe
+    - services.exe
+    - lsass.exe
+    - svchost.exe
+    - explorer.exe
+    - python.exe
+    - pythonw.exe
+    - wscript.exe
+    - OneDrive.exe              # keep — syncs workspace
+    - SecurityHealthSystray.exe
+    - MsMpEng.exe               # Windows Defender
+  static_targets: []            # add process names here to always kill
+                                # e.g. ["msedge.exe", "SearchIndexer.exe"]
+
+telegram:
+  bot_token: ""                 # loaded from .env.local
+  chat_id: ""
+
+logging:
+  win_log: logs/win_monitor.log

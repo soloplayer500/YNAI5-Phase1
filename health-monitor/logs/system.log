@@ -1,0 +1,9 @@
+{"time":"2026-04-12 16:07:40,668","logger":"system","level":"INFO","msg":"health monitor started (smoke test)"}
+{"time":"2026-04-12 16:07:43,048","logger":"system","level":"INFO","msg":"cycle cpu=13.3 ram=86.8 swap=9.0 disk=53.4 events=1"}
+{"time":"2026-04-12 16:07:43,048","logger":"system","level":"INFO","msg":"event metric=ram level=WARNING value=86.8"}
+{"time":"2026-04-12 16:12:37,700","logger":"system","level":"INFO","msg":"health monitor started"}
+{"time":"2026-04-12 16:12:40,138","logger":"system","level":"WARNING","msg":"repeat_offender process=claude.exe appearances=3 memory_mb=127.55"}
+{"time":"2026-04-12 16:12:41,857","logger":"system","level":"INFO","msg":"alert metric=cpu action=recovery state=OK value=None"}
+{"time":"2026-04-12 16:12:41,857","logger":"system","level":"INFO","msg":"alert metric=ram action=alert state=WARNING value=87.0"}
+{"time":"2026-04-12 16:12:41,857","logger":"system","level":"INFO","msg":"alerts_sent=0/2"}
+{"time":"2026-04-12 16:12:41,857","logger":"system","level":"INFO","msg":"cycle cpu=15.7 ram=87.0 swap=9.0 disk=53.4 events=1 loop_ms=4156"}
