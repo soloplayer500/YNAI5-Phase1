@@ -1,7 +1,7 @@
 # Documentation Index
 _Update this file whenever a new doc is added._
 
-Last Updated: 2026-03-29 (Session 16 — Kling guide, cloud research)
+Last Updated: 2026-04-13 (Session 23 — Graphify + Obsidian Visual Skills install, infrastructure knowledge graphs)
 
 ---
 
@@ -35,6 +35,7 @@ _Auto-added by /research skill as YYYY-MM-DD-topic.md_
 | 2026-03-22 | Higgsfield AI vs Kling AI — full comparison, verdict: Kling Standard $6.99/mo wins (4.4x videos, MCP server) | 2026-03-22-higgsfield-vs-kling.md |
 | 2026-03-29 | Kling AI prompting guide — schema, best practices, model limits, web vs API credits | 2026-03-29-kling-ai-prompting-guide.md |
 | 2026-03-29 | Cloud services research — always-on compute, MCP registry, automation platforms, storage CDN | 2026-03-29-cloud-services-research.md |
+| 2026-04-07 | Lyra layered prompt architecture — PLA research, 5-layer template, YNAI5 implementation | 2026-04-07-lyra-prompt-research.md |
 
 ## Reference Files
 _Stable reference material added as needed_
@@ -44,6 +45,18 @@ _Stable reference material added as needed_
 | 2026-03-10-remote-mcp-servers.md | Remote MCP server setup guide — Brave Search, GitHub, already-connected servers |
 | 2026-03-11-github-actions-setup.md | GitHub Actions workflow setup — 3x/day market report, secrets config, Task Scheduler migration |
 | oracle-cloud-setup.md | Oracle Cloud Free Tier setup — ARM VM, systemd services, cron migration, always-free infrastructure |
+
+## Knowledge Graphs & Architecture Diagrams
+_Generated 2026-04-13 by Graphify v0.4.11 + Obsidian Visual Skills_
+
+| File | Contents |
+|------|----------|
+| knowledge/ynai5-su-structure.md | Mermaid folder diagram of YNAI5-SU workspace + graphify summary |
+| knowledge/ynai5-su-architecture.excalidraw | Excalidraw diagram of YNAI5-SU project relationships (projects ↔ services) |
+| knowledge/ynai5-su-graphify-summary.md | Graphify query results — god nodes, cross-community edges, `_cg()` explained |
+| knowledge/vm-graphify-report.md | Graphify analysis of GCP VM YNAI5_AI_CORE — 121 nodes, 180 edges |
+| knowledge/vm-structure.md | Mermaid diagram of VM project structure + service reference table |
+| knowledge/combined-architecture.md | Full infrastructure map: local Claude Code ↔ GCP VM ↔ GitHub Actions ↔ External APIs |
 
 ---
 _Claude auto-updates this index when new docs are added._
