@@ -1,312 +1,382 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YNAI5 AI Control Center</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YNAI5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12101a;
+  --panel:#221b33ee;
+  --line:#493b61;
+  --text:#f2ebfb;
+  --muted:#ad9ec7;
+  --purple:#b78df5;
+  --pink:#ef86cf;
+  --blue:#76d5ff;
+  --green:#8ce3a4;
+  --red:#ff91aa;
+  --yellow:#f5d78d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  height:100vh;
+  overflow:hidden;
+  font-family:Inter,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 14% 10%,rgba(183,141,245,.2),transparent 26%),
+    radial-gradient(circle at 82% 14%,rgba(239,134,207,.14),transparent 22%),
+    linear-gradient(160deg,#0f0d16,#171324 42%,#0f0d16);
+}
 
-  <!-- CSS Design System (load order matters) -->
-  <link rel="stylesheet" href="assets/css/tokens.css" />
-  <link rel="stylesheet" href="assets/css/reset.css" />
-  <link rel="stylesheet" href="assets/css/layout.css" />
-  <link rel="stylesheet" href="assets/css/components.css" />
-  <link rel="stylesheet" href="assets/css/metrics.css" />
-  <link rel="stylesheet" href="assets/css/chat.css" />
-  <link rel="stylesheet" href="assets/css/theme.css" />
+/* ── GRID SHELL ── */
+.app{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  grid-template-rows:64px 1fr 76px;
+  height:100vh;
+}
 
-  <style>
-    /* Inline: loading screen + agent grid (not worth a separate file) */
-    #app { display: none; }
+/* ── TOP BAR ── */
+.top{
+  grid-column:1/3;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 22px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,rgba(19,15,28,.92),rgba(13,10,19,.55));
+  backdrop-filter:blur(14px);
+}
+.brand h1{
+  margin:0;
+  font-size:20px;
+  letter-spacing:.22em;
+  font-weight:700;
+}
+.brand-sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-left:10px;
+}
+.status-bar{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:12px;
+  color:var(--muted);
+}
+.dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green);
+  display:inline-block;
+}
+.dot.offline{background:var(--red);box-shadow:0 0 12px var(--red);}
+.dot.working{background:var(--yellow);box-shadow:0 0 12px var(--yellow);}
+#refresh-time{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
 
-    .agent-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-2);
-      text-align: center;
-      padding: var(--space-4);
-    }
+/* ── LEFT PANEL ── */
+.left{
+  padding:14px;
+  border-right:1px solid rgba(255,255,255,.06);
+  background:rgba(17,13,25,.55);
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.section{
+  padding:12px 14px;
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(38,30,56,.82),rgba(24,18,36,.72));
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 8px 28px rgba(0,0,0,.2);
+}
+.section h3{
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--purple);
+  margin-bottom:9px;
+  opacity:.85;
+}
+.kv-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:4px 8px;
+  font-size:12px;
+  line-height:1.6;
+}
+.kv-row .k{color:var(--muted);}
+.kv-row .v{color:var(--text);text-align:right;}
 
-    .log-view {
-      width: 100%;
-      height: 320px;
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      color: var(--color-text);
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-      resize: vertical;
-    }
+/* task + log items */
+.item-list{display:flex;flex-direction:column;gap:5px;}
+.item{
+  padding:7px 10px;
+  border-radius:10px;
+  background:rgba(7,6,12,.34);
+  border:1px solid rgba(255,255,255,.04);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:#ddd6f2;
+  line-height:1.4;
+  word-break:break-word;
+}
+.item.empty{color:var(--muted);font-style:italic;}
 
-    .log-view.hidden { display: none; }
+/* ── MAIN AREA ── */
+.main{
+  padding:14px;
+  overflow-y:auto;
+}
+.hero{
+  padding:14px 18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(135deg,rgba(183,141,245,.1),rgba(239,134,207,.07),rgba(118,213,255,.04));
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.hero-title{font-size:15px;font-weight:700;}
+.hero-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.chip{
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:11px;
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.05);
+  white-space:nowrap;
+}
 
-    .log-tab-bar {
-      display: flex;
-      gap: var(--space-1);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-3);
-    }
+/* ── AGENT GRID ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:12px;
+}
+.card{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,rgba(43,34,64,.94),rgba(25,20,37,.94));
+  box-shadow:0 14px 36px rgba(0,0,0,.22);
+  overflow:hidden;
+}
+.card.conductor-card{
+  border-color:rgba(183,141,245,.25);
+  background:linear-gradient(180deg,rgba(55,38,80,.96),rgba(30,20,44,.96));
+}
+.card-head{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.card-name{font-weight:700;font-size:13px;}
+.card-model{font-size:11px;color:var(--muted);}
+.card-body{padding:12px 14px;}
+.card-activity{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.avatar{
+  width:40px;height:40px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:grid;place-items:center;
+  font-size:18px;
+  flex-shrink:0;
+  box-shadow:0 0 20px rgba(183,141,245,.25);
+}
+.avatar.scout{background:linear-gradient(135deg,var(--blue),var(--purple));}
+.avatar.director{background:linear-gradient(135deg,var(--pink),var(--purple));}
+.avatar.pulse{background:linear-gradient(135deg,#4ade80,var(--blue));}
+.avatar.forge{background:linear-gradient(135deg,var(--yellow),var(--pink));}
+.avatar.shadow{background:linear-gradient(135deg,var(--green),var(--blue));}
+.avatar.echo{background:linear-gradient(135deg,var(--muted),var(--purple));}
 
-    .log-tab-btn {
-      padding: var(--space-1) var(--space-3);
-      font-size: var(--font-size-xs);
-      font-family: var(--font-mono);
-      color: var(--color-muted);
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast);
-    }
+.card-state{font-size:11px;color:var(--muted);}
+.card-task{
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:12px;
+  background:rgba(7,6,12,.34);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:#ddd6f2;
+  min-height:36px;
+  word-break:break-word;
+}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;}
+.badge{
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:10px;
+  background:rgba(183,141,245,.12);
+  border:1px solid rgba(183,141,245,.22);
+  color:#ecdeff;
+}
+.badge.blue{background:rgba(118,213,255,.12);border-color:rgba(118,213,255,.22);color:#c5edff;}
+.badge.green{background:rgba(140,227,164,.12);border-color:rgba(140,227,164,.22);color:#c5f5d3;}
+.badge.red{background:rgba(255,145,170,.12);border-color:rgba(255,145,170,.22);color:#ffd6de;}
+.badge.yellow{background:rgba(245,215,141,.12);border-color:rgba(245,215,141,.22);color:#f5e6c0;}
+.badge.muted{background:rgba(173,158,199,.08);border-color:rgba(173,158,199,.15);color:var(--muted);}
 
-    .log-tab-btn:hover { background: var(--glass-bg); color: var(--color-text); }
-    .log-tab-btn.active { background: var(--color-cyan-dim); color: var(--color-cyan); border-color: var(--glass-border); }
+/* state color indicators */
+.state-working{color:var(--yellow);}
+.state-active{color:var(--green);}
+.state-routing{color:var(--purple);}
+.state-idle{color:var(--muted);}
+.state-watching{color:var(--blue);}
+.state-blocked{color:var(--red);}
 
-    #agents-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: var(--space-3);
-    }
+/* ── BOTTOM COMMAND BAR ── */
+.bottom{
+  grid-column:1/3;
+  padding:12px 18px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,rgba(14,11,20,.52),rgba(21,16,31,.95));
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+#cmd-input{
+  flex:1;
+  background:rgba(7,6,12,.36);
+  border:1px solid rgba(255,255,255,.08);
+  color:var(--text);
+  padding:12px 16px;
+  border-radius:14px;
+  font-size:13px;
+  font-family:Inter,sans-serif;
+  outline:none;
+  transition:border-color .2s;
+}
+#cmd-input:focus{border-color:rgba(183,141,245,.4);}
+#cmd-input::placeholder{color:var(--muted);}
+#cmd-send{
+  border:0;
+  border-radius:12px;
+  padding:12px 18px;
+  font-weight:700;
+  font-size:13px;
+  color:#140f1a;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  cursor:pointer;
+  white-space:nowrap;
+  transition:opacity .15s;
+}
+#cmd-send:hover{opacity:.85;}
+#cmd-send:disabled{opacity:.4;cursor:not-allowed;}
+.route-chip{
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:11px;
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.05);
+  font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;
+}
 
-    .stat-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-2) 0;
-      border-bottom: 1px solid var(--color-border);
-      font-size: var(--font-size-sm);
-    }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-label { color: var(--color-muted); }
-    .stat-value { font-weight: var(--font-weight-med); color: var(--color-text); }
-  </style>
+/* scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(183,141,245,.25);border-radius:4px;}
+</style>
 </head>
 <body>
+<div class="app">
 
-<!-- ═══════════════════════════════════════════════
-     APP SHELL (hidden until auth passes)
-════════════════════════════════════════════════ -->
-<div id="app">
-
-  <!-- ── Header ── -->
-  <header id="header">
-    <div class="header-brand">
-      <span>YNAI5</span>
-      <span class="version-tag" id="version-tag">v0.3.0</span>
-      <span class="badge badge-green" style="font-size:0.65rem">LIVE</span>
+  <!-- ── TOP BAR ── -->
+  <header class="top">
+    <div class="brand" style="display:flex;align-items:baseline;gap:10px;">
+      <h1>YNAI5</h1>
+      <span class="brand-sub">Agent Control Center</span>
     </div>
-    <div class="header-actions">
-      <span id="last-refresh" style="font-size:0.7rem;color:var(--color-muted)">--:--:--</span>
-      <button id="kill-switch-btn" title="Emergency stop all services">⛔ KILL</button>
-      <button id="theme-toggle" aria-label="Toggle theme">
-        <span id="icon-sun">☀️</span>
-        <span id="icon-moon">🌙</span>
-      </button>
+    <div class="status-bar">
+      <span class="dot" id="status-dot"></span>
+      <span id="status-text">connecting...</span>
+      <span id="refresh-time">--:--:--</span>
     </div>
   </header>
 
-  <!-- ── Nav Sidebar ── -->
-  <nav id="nav">
-    <div class="nav-section-label">Dashboard</div>
-    <div class="nav-item active" data-tab="overview">📊 Overview</div>
-    <div class="nav-item" data-tab="logs">📋 Logs</div>
-    <div class="nav-item" data-tab="status">🔍 Status Board</div>
-    <div class="nav-item" data-tab="chat">💬 Chat</div>
+  <!-- ── LEFT PANEL ── -->
+  <aside class="left">
 
-    <div class="nav-section-label" style="margin-top:var(--space-4)">System</div>
-    <div class="nav-item" style="cursor:default;pointer-events:none">
-      <span class="dot dot-pulse-green"></span>
-      &nbsp;VM: ynai5-core
-    </div>
-    <div class="nav-item" style="cursor:default;pointer-events:none;font-size:0.7rem;color:var(--color-muted)">
-      34.45.31.188 · Ubuntu 22.04
-    </div>
-  </nav>
-
-  <!-- ── Main ── -->
-  <main id="main">
-
-    <!-- Top-level tab bar -->
-    <div class="tab-bar">
-      <button class="tab-btn active" data-tab="overview">📊 Overview</button>
-      <button class="tab-btn" data-tab="logs">📋 Logs</button>
-      <button class="tab-btn" data-tab="status">🔍 Status Board</button>
-      <button class="tab-btn" data-tab="chat">💬 Chat</button>
-    </div>
-
-    <!-- ═══════ TAB: OVERVIEW ═══════ -->
-    <div id="tab-overview" class="tab-panel active">
-
-      <!-- Stage Tracker -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Phase Tracker</div>
-          <span class="badge badge-cyan">Phase 1</span>
-        </div>
-        <div class="stage-tracker">
-          <div class="stage-step done">✅ Infrastructure</div>
-          <div class="stage-connector"></div>
-          <div class="stage-step done">✅ Docker Stack</div>
-          <div class="stage-connector"></div>
-          <div class="stage-step done">✅ Dashboard v0.2.1</div>
-          <div class="stage-connector"></div>
-          <div class="stage-step active">▶ v0.3.0 Control Center</div>
-          <div class="stage-connector"></div>
-          <div class="stage-step">⬜ Revenue</div>
-        </div>
+    <!-- Orchestrator -->
+    <div class="section">
+      <h3>Orchestrator</h3>
+      <div class="kv-row">
+        <span class="k">Name</span><span class="v">YNAI5 Core</span>
+        <span class="k">Status</span><span class="v" id="orch-status">—</span>
+        <span class="k">Active agent</span><span class="v" id="orch-active">—</span>
+        <span class="k">Completed</span><span class="v" id="orch-completed">—</span>
       </div>
+    </div>
 
-      <!-- System Metrics -->
+    <!-- Tasks -->
+    <div class="section">
+      <h3>Task Queue</h3>
+      <div class="item-list" id="task-list">
+        <div class="item empty">No tasks queued</div>
+      </div>
+    </div>
+
+    <!-- Logs -->
+    <div class="section">
+      <h3>Logs</h3>
+      <div class="item-list" id="log-list">
+        <div class="item empty">Waiting for events...</div>
+      </div>
+    </div>
+
+    <!-- Health -->
+    <div class="section">
+      <h3>Health</h3>
+      <div class="kv-row">
+        <span class="k">VM CPU</span><span class="v" id="h-cpu">—</span>
+        <span class="k">RAM</span><span class="v" id="h-ram">—</span>
+        <span class="k">Disk</span><span class="v" id="h-disk">—</span>
+        <span class="k">Uptime</span><span class="v" id="h-uptime">—</span>
+        <span class="k">Services</span><span class="v" id="h-services">—</span>
+        <span class="k">Drive</span><span class="v" id="h-drive">—</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN AREA ── -->
+  <main class="main">
+    <div class="hero">
       <div>
-        <div style="font-size:0.75rem;color:var(--color-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-3)">System Metrics</div>
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-label">RAM Used</div>
-            <div class="metric-value" id="metric-ram">--</div>
-            <div class="metric-sub">4GB swap available</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">CPU</div>
-            <div class="metric-value" id="metric-cpu">--</div>
-            <div class="metric-sub">2 vCPU e2-micro</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Disk Used</div>
-            <div class="metric-value" id="metric-disk">--</div>
-            <div class="metric-sub">30GB balanced PD</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Uptime</div>
-            <div class="metric-value" id="metric-uptime">--</div>
-            <div class="metric-sub">since last reboot</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Daily Budget</div>
-            <div class="metric-value" id="metric-budget">$0.00 / $5.00</div>
-            <div class="usage-bar"><div class="usage-bar-fill" id="budget-bar-fill" style="width:0%"></div></div>
-          </div>
-        </div>
+        <div class="hero-title">Agent Sandbox</div>
+        <div class="hero-sub">Live state from VM · updates every 8s</div>
       </div>
+      <span class="chip" id="hero-chip">connecting...</span>
+    </div>
 
-      <!-- Docker Services Quick View -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Docker Services</div>
-          <button class="btn btn-ghost btn-sm" onclick="fetchStatus()">↻ Refresh</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0">
-          <div class="stat-row">
-            <span class="stat-label">SearXNG</span>
-            <span class="stat-value"><span class="dot dot-green"></span> :8080</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">n8n</span>
-            <span class="stat-value"><span class="dot dot-green"></span> :5678</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Portainer</span>
-            <span class="stat-value"><span class="dot dot-green"></span> :9000</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Flask Chat</span>
-            <span class="stat-value"><span class="dot dot-green"></span> :8001</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">nginx</span>
-            <span class="stat-value"><span class="dot dot-green"></span> :8000 (public)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agents -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">AI Agents</div>
-          <span class="badge badge-muted">Gemini Flash Lite · Free tier</span>
-        </div>
-        <div id="agents-grid"></div>
-      </div>
-
-    </div><!-- /tab-overview -->
-
-    <!-- ═══════ TAB: LOGS ═══════ -->
-    <div id="tab-logs" class="tab-panel">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Service Logs</div>
-          <button class="btn btn-ghost btn-sm" onclick="fetchStatus()">↻ Refresh</button>
-        </div>
-
-        <!-- Log sub-tabs -->
-        <div class="log-tab-bar">
-          <button class="log-tab-btn active" data-log="all">All</button>
-          <button class="log-tab-btn" data-log="n8n">n8n</button>
-          <button class="log-tab-btn" data-log="searxng">SearXNG</button>
-          <button class="log-tab-btn" data-log="portainer">Portainer</button>
-          <button class="log-tab-btn" data-log="billing">Billing</button>
-          <button class="log-tab-btn" data-log="uptime">Uptime</button>
-          <button class="log-tab-btn" data-log="orchestrator">Orchestrator</button>
-          <button class="log-tab-btn" data-log="chat_server">Chat Server</button>
-        </div>
-
-        <!-- Log views (one per sub-tab) -->
-        <textarea id="log-all"         class="log-view"        readonly placeholder="Loading..."></textarea>
-        <textarea id="log-n8n"         class="log-view hidden" readonly placeholder="n8n logs..."></textarea>
-        <textarea id="log-searxng"     class="log-view hidden" readonly placeholder="SearXNG logs..."></textarea>
-        <textarea id="log-portainer"   class="log-view hidden" readonly placeholder="Portainer logs..."></textarea>
-        <textarea id="log-billing"     class="log-view hidden" readonly placeholder="Billing sentinel logs..."></textarea>
-        <textarea id="log-uptime"      class="log-view hidden" readonly placeholder="Uptime logs..."></textarea>
-        <textarea id="log-orchestrator" class="log-view hidden" readonly placeholder="Orchestrator logs..."></textarea>
-        <textarea id="log-chat_server" class="log-view hidden" readonly placeholder="Chat server logs..."></textarea>
-      </div>
-    </div><!-- /tab-logs -->
-
-    <!-- ═══════ TAB: STATUS BOARD ═══════ -->
-    <div id="tab-status" class="tab-panel">
-      <div class="status-board">
-        <div class="panel-header">
-          <div class="panel-title">System Status Board</div>
-          <button class="btn btn-ghost btn-sm" onclick="fetchStatus()">↻ Refresh</button>
-        </div>
-        <div id="status-grid" class="service-grid">
-          <div style="color:var(--color-muted);font-size:0.8rem">Loading checks...</div>
-        </div>
-        <div id="status-summary">Fetching status...</div>
-      </div>
-    </div><!-- /tab-status -->
-
-    <!-- ═══════ TAB: CHAT ═══════ -->
-    <div id="tab-chat" class="tab-panel">
-      <div class="chat-container">
-        <div id="chat-thread"></div>
-        <div class="chat-input-bar">
-          <textarea
-            id="chat-input"
-            placeholder="Ask YNAI5 anything... (Enter to send, Shift+Enter for newline)"
-            rows="1"
-          ></textarea>
-          <button id="chat-send" title="Send message">➤</button>
-        </div>
-      </div>
-    </div><!-- /tab-chat -->
-
+    <div class="grid" id="agent-grid">
+      <!-- rendered by dashboard.js -->
+    </div>
   </main>
-</div><!-- /app -->
 
-<!-- ES Module entry point (loads after DOM) -->
-<script type="module" src="assets/js/main.js"></script>
+  <!-- ── COMMAND BAR ── -->
+  <footer class="bottom">
+    <input id="cmd-input" type="text" placeholder="Send a task to YNAI5 · prefix @claude to route to Claude..." />
+    <span class="route-chip" id="route-indicator">→ gemini</span>
+    <button id="cmd-send">Send</button>
+  </footer>
 
-<!-- Expose fetchStatus globally for onclick handlers -->
-<script type="module">
-  import { fetchStatus } from './assets/js/metrics.js';
-  window.fetchStatus = fetchStatus;
-</script>
+</div>
 
+<script src="assets/js/dashboard.js"></script>
 </body>
 </html>
-<!-- vm-dashboard v0.3.1 sync test 2026-04-10T04:35:59Z -->

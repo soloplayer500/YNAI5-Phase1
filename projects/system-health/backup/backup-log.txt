@@ -57,3 +57,169 @@
 [2026-03-18 19:03:09] Backup saved (trigger=stop) → session-backup.md, session-state.json
 [2026-03-21 21:52:32] SessionStart: backup is 74.8h old — skipped (too old).
 [2026-03-21 23:06:25] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-03-21 23:22:14] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-21 23:32:23] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 04:57:24] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 05:34:21] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 05:56:43] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 10:17:52] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 10:50:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 11:19:17] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-22 11:22:50] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-03-22 11:32:05] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-24 21:22:49] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-24 22:07:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-24 22:27:57] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 19:53:08] SessionStart: backup is 93.4h old — skipped (too old).
+[2026-03-28 19:57:33] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 19:57:36] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 20:43:02] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 20:56:55] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 20:59:07] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 21:06:51] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 21:26:25] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-28 21:32:35] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 11:21:21] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 11:21:51] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 14:56:43] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 16:40:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 18:59:46] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 21:09:37] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-29 21:13:02] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-03-30 21:41:02] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-30 21:46:54] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-31 19:09:30] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-03-31 20:31:26] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 20:15:29] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 21:09:24] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 21:44:14] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 21:48:18] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-01 21:49:59] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 21:54:07] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 22:05:07] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 22:10:32] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 22:17:49] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 22:22:03] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 23:10:38] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 23:13:25] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 23:17:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-01 23:19:13] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 07:52:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 08:59:30] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 08:59:35] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 19:49:29] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 19:49:33] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-02 20:22:01] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 15:46:56] SessionStart: backup is 67.4h old — skipped (too old).
+[2026-04-05 16:43:04] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 16:48:20] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 17:40:42] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-05 18:49:40] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 21:45:12] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 22:12:50] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 22:18:05] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 22:18:53] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 22:20:23] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 22:47:05] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 23:15:00] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 23:15:22] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-05 23:15:38] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 14:29:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 15:49:21] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-06 18:11:59] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 18:12:01] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:29] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:43] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:49] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:53] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:42:56] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:04] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:13] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:16] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:18] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:21] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:28] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-06 20:43:31] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-07 00:18:43] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-07 00:31:53] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-07 00:32:05] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-07 08:24:25] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-08 22:17:40] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-09 06:05:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:06:56] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:25:42] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:36:30] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:36:49] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:44:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 06:45:06] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 07:24:32] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 07:24:43] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 07:49:43] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-09 09:29:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 15:33:31] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 21:48:35] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-09 22:31:19] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-10 00:45:08] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 00:55:47] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 10:52:36] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 10:59:57] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 11:00:07] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-10 12:21:17] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 12:21:20] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 12:21:23] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 12:21:27] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-10 12:21:32] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-12 15:21:13] SessionStart: backup is 51.0h old — skipped (too old).
+[2026-04-12 16:14:40] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-12 16:14:46] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-12 16:14:50] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-12 16:14:59] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-12 16:15:02] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-13 10:02:30] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-13 10:15:39] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-13 10:22:55] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-13 10:34:56] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-13 14:39:06] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-15 16:06:58] SessionStart: backup is 49.5h old — skipped (too old).
+[2026-04-15 16:08:30] SessionStart: backup is 49.5h old — skipped (too old).
+[2026-04-15 16:10:31] SessionStart: backup is 49.5h old — skipped (too old).
+[2026-04-15 16:12:24] SessionStart: backup is 49.6h old — skipped (too old).
+[2026-04-15 16:57:34] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-15 16:57:38] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-16 09:03:35] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-16 10:57:30] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-16 11:14:18] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-16 11:42:32] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-18 11:52:47] SessionStart: backup is 48.2h old — skipped (too old).
+[2026-04-18 11:56:40] SessionStart: backup is 48.2h old — skipped (too old).
+[2026-04-18 11:57:49] SessionStart: backup is 48.3h old — skipped (too old).
+[2026-04-18 11:58:03] SessionStart: backup is 48.3h old — skipped (too old).
+[2026-04-18 12:11:02] SessionStart: backup is 48.5h old — skipped (too old).
+[2026-04-18 12:11:44] SessionStart: backup is 48.5h old — skipped (too old).
+[2026-04-18 12:13:32] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-18 12:33:42] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-18 13:18:57] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-18 15:10:00] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-18 16:46:31] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-20 20:37:37] SessionStart: backup is 51.9h old — skipped (too old).
+[2026-04-20 20:38:39] SessionStart: backup is 51.9h old — skipped (too old).
+[2026-04-20 20:39:11] SessionStart: backup is 51.9h old — skipped (too old).
+[2026-04-20 20:43:45] SessionStart: backup is 52.0h old — skipped (too old).
+[2026-04-20 20:43:47] SessionStart: backup is 52.0h old — skipped (too old).
+[2026-04-20 21:07:13] SessionStart: backup is 52.3h old — skipped (too old).
+[2026-04-20 22:01:09] SessionStart: backup is 53.2h old — skipped (too old).
+[2026-04-20 22:01:39] SessionStart: backup is 53.3h old — skipped (too old).
+[2026-04-20 22:14:26] SessionStart: backup is 53.5h old — skipped (too old).
+[2026-04-20 22:31:22] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-21 05:04:22] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 05:04:22] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 05:04:24] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 05:04:54] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 05:04:54] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 05:05:36] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 07:27:30] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 07:27:56] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 07:53:14] Backup saved (trigger=compact) → session-backup.md, session-state.json
+[2026-04-21 09:57:57] Backup saved (trigger=stop) → session-backup.md, session-state.json
+[2026-04-21 15:18:58] Backup saved (trigger=stop) → session-backup.md, session-state.json

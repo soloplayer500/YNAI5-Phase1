@@ -1,7 +1,7 @@
 # Projects Index
 _Update this file whenever a new project is created._
 
-Last Updated: 2026-04-05 (Session 18 — YNAI5-Phase1 Infrastructure Bootstrap)
+Last Updated: 2026-04-10 (Session 20 — MCP Integration + VM Frontend Fix)
 
 ---
 
@@ -19,6 +19,7 @@ Last Updated: 2026-04-05 (Session 18 — YNAI5-Phase1 Infrastructure Bootstrap)
 | Ralph Automation | 🔨 Building | Medium | [ralph-automation/](ralph-automation/) |
 | System Health | ✅ Active | High | [system-health/](system-health/) |
 | **Niche Research Agent** | 🔨 Building | **High** | [niche-research/](niche-research/) |
+| **YNAI5 MCPs** | 🔨 Building | **High** | [ynai5-mcps/](ynai5-mcps/) |
 
 ## Status Key
 - 🔨 Building — actively in development

@@ -1,5 +1,27 @@
 # Social Media Strategy — YNAI5 World
-Last Updated: 2026-03-09
+Last Updated: 2026-03-28 (Session 15 — Dual-Channel Architecture + Kling AI)
+
+---
+
+## Dual-Channel Architecture (ACTIVE)
+
+### Channel A — Growth Engine (YNAI5 World)
+**Goal:** Follower base. No monetization pressure. Feed the algorithm.
+**Content niches:** AI Brainrot / Elemental Fantasy AI / AI News Reactions
+**Full niche definitions:** `channel-a-niches.md`
+**Automation:** `/content-batch` → 2 videos/day dispatched via parallel Claude agents
+
+### Channel B — Revenue Engine (Block Syndicate)
+**Goal:** Paid Telegram subs ($9.99/mo). Crypto + stock signals.
+**Status:** Infrastructure live (screener-channel-bot.py, GitHub Actions 8AM AST)
+**Funnel activation:** when Channel A hits 1K+ followers → add CTA → drive to screener
+
+### Funnel Flow
+```
+TikTok/Shorts (Channel A) → bio link → Free Telegram → VIP upgrade (Gumroad $9.99/mo)
+```
+
+---
 
 ---
 

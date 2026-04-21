@@ -299,6 +299,53 @@ def list_agents():
         return {"available": False, "note": "AGENTS.md not found"}
 
 
+@app.get("/api/agents-state")
+def get_agents_state():
+    """Return all 7 agent definitions with live state derived from HEARTBEAT.json."""
+    hb    = read_heartbeat()
+    active = hb.get("active_agent")   # "claude" | "gemini" | None
+    queue  = hb.get("task_queue", [])
+    last   = hb.get("last_task_result", {})
+    status = hb.get("status", "idle")
+
+    agents = [
+        {"id": "conductor", "name": "Conductor", "model": "Claude",      "icon": "🧠", "role": "control"},
+        {"id": "scout",     "name": "Scout",     "model": "Gemini",      "icon": "📚", "role": "research"},
+        {"id": "director",  "name": "Director",  "model": "Claude",      "icon": "✍️", "role": "content"},
+        {"id": "pulse",     "name": "Pulse",     "model": "Monitor",     "icon": "📡", "role": "health"},
+        {"id": "forge",     "name": "Forge",     "model": "Claude Code", "icon": "🛠️", "role": "build"},
+        {"id": "shadow",    "name": "Shadow",    "model": "Sim only",    "icon": "📈", "role": "trading"},
+        {"id": "echo",      "name": "Echo",      "model": "Ollama",      "icon": "💬", "role": "helper"},
+    ]
+
+    state_map = {"claude": "conductor", "gemini": "scout"}
+    active_card = state_map.get(active)
+
+    for a in agents:
+        if a["id"] == active_card:
+            a["state"]        = "working"
+            a["current_task"] = (last.get("result") or "executing task")[:80]
+        elif a["id"] == "conductor" and queue:
+            a["state"]        = "routing"
+            a["current_task"] = f"routing {len(queue)} task(s)"
+        elif a["id"] == "conductor" and status == "working":
+            a["state"]        = "active"
+            a["current_task"] = "supervising agent"
+        elif a["id"] == "pulse":
+            a["state"]        = "watching"
+            a["current_task"] = "health + alerts"
+        else:
+            a["state"]        = "idle"
+            a["current_task"] = "—"
+
+    return {
+        "agents":              agents,
+        "orchestrator_status": status,
+        "active_agent":        active,
+        "queue_depth":         len(queue),
+    }
+
+
 @app.get("/", response_class=HTMLResponse)
 def dashboard():
     try:

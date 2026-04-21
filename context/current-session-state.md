@@ -1,38 +1,43 @@
 # Current Session State
-_Updated: 2026-04-10 (end of Session 21)_
+_Auto-updated by session-backup.py at 2026-04-21 15:18:58 (trigger: stop)_
 
-## Last Session Summary
-Session 21 — VM Architecture Audit + Stabilization + GitHub CI/CD + Vertex AI + Ollama
+## Last Session Context
 
-### What Was Fully Completed
-- ynai5-bridge.service disabled (was crash-looping 59,926 times)
-- Dashboard symlink: `/ynai5_runtime/dashboard` → `~/YNAI5_AI_CORE/dashboard`
-- Netdata secured to localhost (port 19999 closed externally)
-- All 6 VM endpoints verified green
-- Vertex AI routing added to chat_server.py (>500 char → Gemini 1.5 Pro)
-- models.json v0.3.1 with 4-tier routing
-- projects/vm-dashboard/ created in YNAI5-SU GitHub repo
-- vm-sync auto-deploy workflow LIVE and tested (Telegram confirmed)
-- VM_IP + VM_SSH_KEY secrets added to GitHub
-- Session log: sessions/2026-04-10-session-21.md
-- Ollama installed + phi3:mini pulled
-- Ollama moved to docker-compose.yml (systemd disabled, Docker image downloading)
+Session backup from 2026-04-21 15:18:58 (trigger: stop).
+Workspace: C:/Users/shema/OneDrive/Desktop/YNAI5-SU
 
-### What To Do First Next Session
-See `actions/next-session-startup.md` for exact commands.
+--- CURRENT PRIORITIES ---
+# Current Priorities
+_Update this file monthly or whenever focus shifts. Claude checks this at every session start._
 
-1. Check if Ollama Docker image finished downloading
-2. Start Ollama Docker + pull phi3:mini into volume
-3. Test phi3 inference via REST API
-4. Start Open WebUI container
-5. Add nginx proxy for Open WebUI access
-6. Then: new plans and integrations
+Last Updated: 2026-04-10 (Session 21)
 
-## VM State
-- Dashboard: http://34.45.31.188 (all services up)
-- Ollama: systemd disabled, Docker image downloading (likely done by next session)
-- Health check: auto-runs daily 9AM AST via GitHub Actions
+## Top Priority (Most Urgent)
+**Crypto & Stock Trading — Capital Growth**
+- Laptop hardware limits video production — social media pipeline paused until better hardware
+- Focus: grow capital through smart crypto/stock plays using the full finance skills suite
+- Current Kraken positions are mostly dust/underwater — need strategy to recover and build
+- Tools ready: /crypto-screen, /crypto-portfolio, /technical-analysis, /portfolio-strategy, /risk-analyze, /macro-impact
+- Daily habit: morning briefing (9AM AST auto) → scan opportunities → log predictions → track accuracy
+- **Payday: 2026-03-27 Friday 12:01 PM AST** — buy Kling AI $6.99 + Anthropic credits $10 FIRST
 
-## GitHub Repo
-- https://github.com/soloplayer500/YNAI5-Phase1
-- Latest VM commit: `feat: add Ollama + Open WebUI to docker-compose`
+## Priority 2
+**Passive Income — Crypto Screener Telegram Channel**
+- Build automated crypto/stock screener that posts daily signals to a paid Telegram channel
+- Global audience (Reddit, Twitter/X, Discord) — NOT Aruba-local
+- Week 1: screener-channel-bot.py + Gumroad payment page + Reddit/Twitter/Discord accounts
+- Week 2: first paid subscribers → proof of concept → $60–330 MRR
+
+--- OPEN ACTIONS ---
+[gmail-triage-pending.md] # Gmail Triage Pending
+[next-session-startup.md] # Next Session Startup — YNAI5 VM
+[passive-income-week1.md] # Passive Income — Week 1 Checklist
+[payday-2026-03-27.md] # Payday Plan — 2026-03-27 (Friday)
+[tomorrow-2026-03-11.md] # Tomorrow — 2026-03-11
+
+Run /health-check to verify system. Continue from context/current-session-state.md.
+
+## What To Do First
+1. Check `actions/` for open TODO items
+2. Check `context/current-priorities.md` for top priority
+3. Resume from where the last session left off

@@ -66,10 +66,18 @@ See @memory/decisions-log.md
 | patterns.md | Recurring behaviors and workflow insights |
 | decisions-log.md | Chronological decision log |
 
-## Skills Available (29 total)
+## Key Learnings (Session 15 — 2026-03-28)
+- [2026-03-28] Dual-channel content architecture confirmed: Channel A (YNAI5 World — brainrot/fantasy/news) = growth, Channel B (Block Syndicate) = revenue. Funnel activates at 1K+ followers.
+- [2026-03-28] Kling AI confirmed winner for brainrot + fantasy + AI news content — MCP automation edge makes it unchallenged vs Higgsfield
+- [2026-03-28] /content-batch skill built — parallel agent dispatch: trend → 2 scripts → voice → Kling video → B-roll → queue/
+- [2026-03-28] 3 content niches defined: AI Brainrot (highest virality), Elemental/Fantasy AI (high saves), AI News Reaction (evergreen)
+- [2026-03-28] Rotation schedule set: Mon/Fri=News, Tue/Thu/Sun=Brainrot, Wed/Sat=Fantasy
+- [2026-03-28] Block Syndicate paused from promotion until Channel A hits audience — infrastructure stays live
+
+## Skills Available (30 total)
 /research, /session-close, /weekly-review, /decision, /remember, /market-check, /project-update, /voice-gen, /prompt-gen, /gemini, /kimi, /email-check, /kraken, /health-check, /docker, /backup
 /stock-screen, /dcf-value, /risk-analyze, /earnings-breakdown, /portfolio-strategy, /technical-analysis, /dividend-strategy, /competitive-analysis, /pattern-finder, /stock-analyze (finance suite)
-/trend-check, /content-gen, /script-gen, /niche-finder, /video-plan (social media — 2026-03-16)
+/trend-check, /content-gen, /content-batch, /script-gen, /niche-finder, /video-plan (social media — updated 2026-03-28)
 /crypto-portfolio, /crypto-screen (crypto intelligence — Session 11-12)
 /learn, /macro-impact, /stock-analyze (Session 13 — 2026-03-22)
 

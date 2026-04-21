@@ -36,6 +36,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["projects/system-health/health-check.py", "--telegram"],
       "port": 8006
+    },
+    {
+      "name": "ynai5-dashboard-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8090", "--directory", "C:/Users/shema/OneDrive/Desktop/YNAI5-SU/projects/vm-dashboard/dashboard"],
+      "port": 8090
     }
   ]
 }

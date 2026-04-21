@@ -1,36 +1,83 @@
 {
   "agents": [
     {
-      "id": "orchestrator",
-      "name": "YNAI5 Orchestrator",
-      "description": "General purpose — Lyra 5-layer prompt, Gemini Flash Lite",
-      "model": "gemini-flash-lite",
+      "id": "conductor",
+      "name": "Conductor",
+      "model": "Claude",
       "icon": "🧠",
+      "role": "control",
+      "description": "Orchestrates and routes all agent tasks. Primary control brain.",
       "system_prompt_layer": "lyra-full",
-      "notes": "Primary agent. Handles all general queries via Gemini Flash Lite free tier."
+      "maps_to": "claude"
     },
     {
-      "id": "searcher",
-      "name": "SearXNG Search",
-      "description": "Web search via self-hosted SearXNG on port 8080",
-      "model": "searxng",
-      "icon": "🔍",
+      "id": "scout",
+      "name": "Scout",
+      "model": "Gemini",
+      "icon": "📚",
+      "role": "research",
+      "description": "Research and data gathering — Gemini Flash Lite free tier.",
+      "system_prompt_layer": "lyra-full",
+      "maps_to": "gemini"
+    },
+    {
+      "id": "director",
+      "name": "Director",
+      "model": "Claude",
+      "icon": "✍️",
+      "role": "content",
+      "description": "Turns research into content, scripts, and structured output.",
+      "system_prompt_layer": "lyra-full",
+      "maps_to": "claude"
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "model": "Monitor",
+      "icon": "📡",
+      "role": "health",
+      "description": "Watches system health and fires alerts. Always watching.",
       "system_prompt_layer": "none",
-      "notes": "Routes search queries to 127.0.0.1:8080. No LLM cost."
+      "maps_to": "health-monitor"
     },
     {
-      "id": "analyst",
-      "name": "Content Analyst",
-      "description": "Script/trend analysis — Gemini Flash Lite (Ollama unavailable on lean VM)",
-      "model": "gemini-flash-lite",
-      "icon": "📊",
+      "id": "forge",
+      "name": "Forge",
+      "model": "Claude Code",
+      "icon": "🛠️",
+      "role": "build",
+      "description": "Builds and iterates on frontend components and infrastructure.",
       "system_prompt_layer": "lyra-full",
-      "notes": "Ollama removed — 958MB RAM lean mode. Uses Gemini Flash Lite instead."
+      "maps_to": "claude"
+    },
+    {
+      "id": "shadow",
+      "name": "Shadow",
+      "model": "Sim only",
+      "icon": "📈",
+      "role": "trading",
+      "description": "Paper trading simulation — crypto/stock signal testing.",
+      "system_prompt_layer": "none",
+      "maps_to": "sim"
+    },
+    {
+      "id": "echo",
+      "name": "Echo",
+      "model": "Ollama",
+      "icon": "💬",
+      "role": "helper",
+      "description": "Local fast replies via Ollama (disabled on lean VM — 958MB RAM).",
+      "system_prompt_layer": "none",
+      "maps_to": "ollama",
+      "disabled": true,
+      "disabled_reason": "VM lean mode — Ollama requires >1GB RAM"
     }
   ],
   "_meta": {
-    "version": "0.3.0",
-    "ollama_removed": true,
-    "reason": "VM RAM 958MB — lean mode, Ollama disabled"
+    "version": "1.0.0",
+    "updated": "2026-04-15",
+    "total": 7,
+    "active": 6,
+    "note": "agent states derived from HEARTBEAT.json at runtime via /api/agents-state"
   }
 }

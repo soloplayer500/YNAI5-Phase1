@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "created": "2026-04-18",
+    "purpose": "Proposed file organization moves for YNAI5 Google Drive taxonomy. Review each entry and set status to 'approved' or 'rejected' before Claude executes any moves.",
+    "instructions": "Change status from 'pending' to 'approved' for moves you want executed. Set 'rejected' to skip. Then ask Claude to run /gdrive-org execute.",
+    "warning": "NO files will be moved until you explicitly approve. This is a review-first, execute-second system."
+  },
+  "proposed_moves": [
+    {
+      "id": "PM-001",
+      "from": "gdrive:/YNAI5_AI_CORE/SYNC/CORE_IDENTITY.md",
+      "to": "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP/CROSS_MODEL_SYNC/CORE_IDENTITY.md",
+      "reason": "CORE_IDENTITY is a cross-model context file — belongs in the dedicated CROSS_MODEL_SYNC handoff folder",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-002",
+      "from": "gdrive:/YNAI5_AI_CORE/SYNC/UNIVERSAL_AI_GUIDE.md",
+      "to": "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP/CROSS_MODEL_SYNC/UNIVERSAL_AI_GUIDE.md",
+      "reason": "Universal AI guide is a cross-agent reference — belongs in CROSS_MODEL_SYNC alongside CORE_IDENTITY",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-003",
+      "from": "local:docs/knowledge/combined-architecture.md",
+      "to": "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP/combined-architecture.md",
+      "reason": "Infrastructure architecture doc should live on Drive so Gemini can access it directly without needing local file access",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-004",
+      "from": "local:docs/knowledge/vm-structure.md",
+      "to": "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP/vm-structure.md",
+      "reason": "VM structure doc belongs in Infrastructure folder on Drive — useful for Gemini and cross-device sessions",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-005",
+      "from": "local:docs/2026-03-10-crypto-market-dynamics.txt",
+      "to": "gdrive:/YNAI5_AI_CORE/06_Knowledge_Base/2026-03-10-crypto-market-dynamics.txt",
+      "reason": "Research doc — belongs in Knowledge Base on Drive for Gemini access and archival",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-006",
+      "from": "local:docs/2026-03-22-higgsfield-vs-kling.md",
+      "to": "gdrive:/YNAI5_AI_CORE/06_Knowledge_Base/2026-03-22-higgsfield-vs-kling.md",
+      "reason": "Finalized research doc — archive to Knowledge Base",
+      "status": "pending",
+      "risk": "low"
+    },
+    {
+      "id": "PM-007",
+      "from": "local:projects/crypto-monitoring/kraken/predictions.json",
+      "to": "gdrive:/YNAI5_AI_CORE/02_Finance_Markets/predictions.json",
+      "reason": "Trade predictions should be on Drive for cross-device access and Gemini analysis",
+      "status": "pending",
+      "risk": "medium",
+      "note": "Keep local copy — this is a copy operation, not a move"
+    },
+    {
+      "id": "PM-008",
+      "from": "local:playbooks/tiktok-video-assembly.md",
+      "to": "gdrive:/YNAI5_AI_CORE/00_YNAI5_CORE/playbooks/tiktok-video-assembly.md",
+      "reason": "Core strategy playbook — belongs in YNAI5_CORE for preservation and cross-device access",
+      "status": "pending",
+      "risk": "low"
+    }
+  ],
+  "new_folders_to_confirm": [
+    "gdrive:/YNAI5_AI_CORE/00_YNAI5_CORE ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/01_Infrastructure_GCP/CROSS_MODEL_SYNC ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/02_Finance_Markets ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/03_Music_Symphony ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/04_Personal_Archive ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/05_Inbox_Unsorted ✅ CREATED",
+    "gdrive:/YNAI5_AI_CORE/06_Knowledge_Base ✅ CREATED"
+  ]
+}

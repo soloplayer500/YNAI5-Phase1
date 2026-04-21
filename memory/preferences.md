@@ -17,6 +17,7 @@ _Auto-updated. Every "remember I always prefer X" saves here with date._
 - [2026-03-09] Iterative: idea → design → build → test → improve
 - [2026-03-10] API key collection: open a Notepad .txt file on Desktop for user to paste key — never ask them to type sensitive keys in chat
 - [2026-03-16] API/MCP workflow: whenever a new API key or MCP is needed, AUTOMATICALLY open YNAI5-KEY-INPUT.txt via Notepad — do not wait for user to open it. Keeps workflow moving faster.
+- [2026-04-07] VM interactive tasks (Gemini CLI auth, live log watching, TTY-required commands): use GCP SSH-in-browser at console.cloud.google.com — not laptop SSH. Guide commands through browser terminal when TTY is needed.
 
 ## Output Format
 - [2026-03-09] Structured responses: headings, bullet points, clear sections

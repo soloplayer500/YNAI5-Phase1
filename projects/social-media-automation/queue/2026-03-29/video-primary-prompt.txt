@@ -1,0 +1,24 @@
+# Kling Video Prompt — Fire Elemental (READY TO RUN when API credits topped up)
+
+## MCP Call
+model_name: kling-v2-master
+aspect_ratio: 9:16
+duration: 10
+mode: professional
+cfg_scale: 0.4
+
+prompt:
+A fire elemental warrior in full obsidian fantasy armor, standing at the center of a collapsed volcanic crater at dusk, molten lava veins pulse and glow across the chest piece and gauntlets, a crown of fire rises from the helmet, ash drifts upward in slow motion, dramatic god-ray lighting from below, camera slowly pushes forward. Dark fantasy cinematic style, hyper-detailed, 4K, deep orange and black and gold color palette, no text, no watermark.
+
+negative_prompt:
+text, watermark, blurry, low quality, cartoon, 2D animation, ugly, deformed
+
+## Status
+⚠️ BLOCKED — API credits empty. Web app plan ≠ API credits.
+ACTION: Top up at Kling Developer Console → then re-run this prompt.
+
+## After Generation
+1. Save video URL to video-primary-url.txt
+2. Download to video-primary.mp4
+3. Run FFmpeg merge: ffmpeg -i video-primary.mp4 -i voice-primary.mp3 -c:v copy -c:a aac -shortest video-merged.mp4
+4. Add watermark: ffmpeg -i video-merged.mp4 -vf "drawtext=fontfile=/Windows/Fonts/arial.ttf:text='YNAI5':fontcolor=white:fontsize=28:alpha=0.7:x=20:y=h-th-20" video-final.mp4

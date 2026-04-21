@@ -1,0 +1,39 @@
+YNAI5 MCP — API KEYS YOU NEED
+==============================
+
+1. PERPLEXITY
+   Get it: https://www.perplexity.ai/settings/api
+   Key format: pplx-xxxxxxxxxxxx
+
+2. TELEGRAM
+   Get it: https://my.telegram.org/apps
+   You need: API_ID (number) + API_HASH (string)
+   Then run: python3 telegram-mcp/gen_session.py to get SESSION_STRING
+
+3. KRAKEN
+   Get it: Kraken.com → Security → API → Create Key
+   Permissions needed: Query Funds, Query Open Orders, Query Trades, Create Orders
+   You need: API Key + API Secret
+
+4. SUNO
+   Get it: Log into suno.ai → Open DevTools (F12)
+   Go to: Application → Cookies → suno.ai
+   Find cookie: __client_uat_yWxZdoEr → copy the value
+
+5. GENIUS
+   Get it: https://genius.com/api-clients → New API Client
+   You need: Client Access Token (not secret)
+
+6. SPOTIFY
+   Get it: https://developer.spotify.com/dashboard → Create App
+   You need: Client ID + Client Secret
+   Redirect URI: http://localhost:8888/callback
+
+7. CRYPTOPANIC (OpenNews - OPTIONAL, free tier works without key)
+   Get it: https://cryptopanic.com/developers/api/
+   Free tier works without key for basic news
+
+NO KEY NEEDED:
+- Playwright (browser automation, no auth)
+- CoinGecko data in OpenNews (free public API)
+- Fear & Greed Index in OpenNews (free public API)

@@ -1,0 +1,100 @@
+{
+  "mcpServers": {
+
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+
+    "perplexity": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx",
+               "python","/PATH/TO/ynai5-mcps/perplexity-mcp/server.py"],
+      "env": { "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_KEY" }
+    },
+
+    "research": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx",
+               "python","/PATH/TO/ynai5-mcps/research-mcp/server.py"],
+      "env": { "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_KEY" }
+    },
+
+    "telegram": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","telethon",
+               "--with","python-dotenv","--with","cryptg",
+               "python","/PATH/TO/ynai5-mcps/telegram-mcp/server.py"],
+      "env": {
+        "TELEGRAM_API_ID":       "YOUR_API_ID",
+        "TELEGRAM_API_HASH":     "YOUR_API_HASH",
+        "TELEGRAM_SESSION_STRING":"YOUR_SESSION_STRING"
+      }
+    },
+
+    "kraken": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/kraken-mcp/server.py"],
+      "env": {
+        "KRAKEN_API_KEY":    "YOUR_KRAKEN_API_KEY",
+        "KRAKEN_API_SECRET": "YOUR_KRAKEN_SECRET"
+      }
+    },
+
+    "hive-crypto": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/hive-crypto-mcp/server.py"],
+      "env": {
+        "LUNARCRUSH_API_KEY": "OPTIONAL",
+        "CMC_API_KEY":        "OPTIONAL"
+      }
+    },
+
+    "trading-signals": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx",
+               "python","/PATH/TO/ynai5-mcps/trading-signals-mcp/server.py"]
+    },
+
+    "opennews": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/opennews-mcp/server.py"],
+      "env": { "CRYPTOPANIC_API_KEY": "OPTIONAL" }
+    },
+
+    "suno": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/suno-mcp/server.py"],
+      "env": { "SUNO_SESSION_ID": "YOUR_SUNO_COOKIE" }
+    },
+
+    "genius": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/genius-mcp/server.py"],
+      "env": { "GENIUS_ACCESS_TOKEN": "YOUR_GENIUS_TOKEN" }
+    },
+
+    "spotify": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/spotify-mcp/server.py"],
+      "env": {
+        "SPOTIFY_CLIENT_ID":     "YOUR_CLIENT_ID",
+        "SPOTIFY_CLIENT_SECRET": "YOUR_CLIENT_SECRET"
+      }
+    },
+
+    "distribution": {
+      "command": "uv",
+      "args": ["run","--with","fastmcp","--with","httpx","--with","python-dotenv",
+               "python","/PATH/TO/ynai5-mcps/distribution-mcp/server.py"],
+      "env": { "AYRSHARE_API_KEY": "YOUR_AYRSHARE_KEY" }
+    }
+
+  }
+}

@@ -1,76 +1,61 @@
 # Next Session Startup — YNAI5 VM
-_Written: 2026-04-10 (end of Session 21)_
+_Updated: 2026-04-10 (end of Session 22)_
 
-## First Thing: Check VM Status
+## VM Status Check (Run First)
 ```bash
-ssh -i ~/.ssh/google_compute_engine shema@34.45.31.188 "docker ps --format 'table {{.Names}}\t{{.Status}}' && free -m | grep -E 'Mem|Swap'"
+ssh -i ~/.ssh/google_compute_engine -o StrictHostKeyChecking=no shema@34.45.31.188 "df -h / | tail -1 && free -m | grep Mem && for svc in ynai5-dashboard ynai5-chat nginx docker; do printf '%-20s' \$svc; systemctl is-active \$svc; done"
 ```
+
+Expected: disk ~72% (8.4GB free), RAM ~550MB used, all services active.
 
 ---
 
-## Resume: Ollama Docker Setup
+## VM Is Stable — All Issues Fixed This Session
 
-### Step 1 — Check if Ollama image finished downloading
-```bash
-ssh -i ~/.ssh/google_compute_engine shema@34.45.31.188 "docker images | grep ollama"
-```
-- If image shows → go to Step 2
-- If not → `cd ~/YNAI5_AI_CORE && docker compose up -d ollama` (triggers pull)
+### What Works Now
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Disk | ✅ 8.4GB free | Was 100% full — fixed by removing old snap revisions |
+| All API endpoints | ✅ 200 OK | Fixed blocking GDrive FUSE hang in main.py |
+| ynai5-dashboard (port 8000) | ✅ active | FastAPI + uvicorn |
+| ynai5-chat (port 8001) | ✅ active | Flask LLM proxy (Gemini + Vertex) |
+| nginx (port 80) | ✅ active | Reverse proxy |
+| Docker stack | ✅ active | n8n + SearXNG + Portainer |
+| Ollama systemd | ⏸ disabled | phi3:mini installed, enable when ready |
 
-### Step 2 — Start Ollama container + pull phi3:mini into Docker volume
-```bash
-ssh shema@34.45.31.188 "cd ~/YNAI5_AI_CORE && docker compose up -d ollama && sleep 5 && docker exec ollama ollama pull phi3:mini"
-```
-(This takes ~3 min — model downloads into Docker volume, not systemd path)
-
-### Step 3 — Test inference via REST API (no spinner)
-```bash
-ssh shema@34.45.31.188 "curl -s -X POST http://127.0.0.1:11434/api/generate \
-  -H 'Content-Type: application/json' \
-  -d '{\"model\":\"phi3:mini\",\"prompt\":\"Reply in one sentence: what is YNAI5?\",\"stream\":false}' \
-  | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d[\"response\"][:200]);print(\"tok/s:\",round(d[\"eval_count\"]/d[\"eval_duration\"]*1e9,1))'"
-```
-
-### Step 4 — Start Open WebUI
-```bash
-ssh shema@34.45.31.188 "cd ~/YNAI5_AI_CORE && docker compose up -d open-webui && sleep 5 && curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000"
-# Expected: 200
-```
-
-### Step 5 — Add nginx proxy for Open WebUI (so you can access it via browser)
-Add to `/etc/nginx/sites-enabled/ynai5` under the existing server block:
-```nginx
-location /webui/ {
-    proxy_pass http://127.0.0.1:3000/;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-}
-```
-Then: `sudo nginx -t && sudo systemctl reload nginx`
-Access at: `http://34.45.31.188/webui/`
+### What Was Fixed
+1. **Disk 100% full** → Removed old snap revisions (core20/core22/gcloud/lxd old revisions) → 8.4GB freed
+2. **docker-compose ollama error** → Docker Ollama image is 8GB+ (CUDA). Removed from compose. Use systemd instead.
+3. **GDrive FUSE hang blocking all API endpoints** → Fixed `is_drive_mounted()` to read `/proc/mounts` instead of calling `os.listdir()` or `mountpoint -q` (both hang on stuck FUSE)
+4. **models.json** → Updated to v0.4.0 with phi3:mini as rank-1
 
 ---
 
-## End of Month — VM Upgrade Plan
-When payday hits, upgrade from e2-micro → e2-small for real Phi-3 speed:
+## Next Session: phi3 + Own LLM Server
+
+### Step 1 — Enable Ollama (phi3:mini already installed)
 ```bash
-# Stop VM (do this from GCP console or:)
-gcloud compute instances stop ynai5-vm --zone=us-central1-a
-gcloud compute instances set-machine-type ynai5-vm --machine-type=e2-small --zone=us-central1-a
-gcloud compute instances start ynai5-vm --zone=us-central1-a
+ssh -i ~/.ssh/google_compute_engine -o StrictHostKeyChecking=no shema@34.45.31.188 "sudo systemctl enable --now ollama && sleep 5 && curl -s http://127.0.0.1:11434/api/tags | python3 -c 'import sys,json; [print(m[\"name\"]) for m in json.load(sys.stdin)[\"models\"]]'"
 ```
-Cost: ~$13/month. Phi-3 goes from 1-2 tok/s → 8-15 tok/s (usable for real-time chat).
+
+### Step 2 — Test phi3:mini inference via REST API
+```bash
+ssh -i ~/.ssh/google_compute_engine -o StrictHostKeyChecking=no shema@34.45.31.188 "curl -s --max-time 120 -X POST http://127.0.0.1:11434/api/generate -H 'Content-Type: application/json' -d '{\"model\":\"phi3:mini\",\"prompt\":\"In one sentence: what is an AI assistant?\",\"stream\":false}' | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d[\"response\"][:200]); print(\"Speed:\",round(d[\"eval_count\"]/d[\"eval_duration\"]*1e9,1),\"tok/s\")'"
+```
+Expected: 1-2 tok/s on e2-micro (slow but working). Real speed after VM upgrade.
+
+### Step 3 — Wire phi3 into chat_server.py
+Add a `call_ollama(message)` function and route short/simple prompts to it as rank-0 (before Gemini Flash).
+
+### Step 4 — Own LLM Server (planned)
+Build a thin FastAPI wrapper around Ollama that exposes a clean `/v1/chat` endpoint compatible with OpenAI format. This becomes the local LLM tier in the AI routing stack.
 
 ---
 
-## Other Things Queued (From Previous Sessions)
-- Perplexity API key → generate at perplexity.ai/settings/api → paste in YNAI5-KEY-INPUT.txt → adds to .env.local
-- Wire `research-mcp` + `perplexity-mcp` (waiting on key)
-- n8n event bus — wire Gemini worker + Claude runner through n8n for proper agent orchestration
-- Netdata → dashboard widget (future STATUS BOARD tab enhancement)
-- Health check Telegram alert activates automatically at 9AM AST daily (first run tomorrow)
+## End of Month — VM Upgrade
+Upgrade e2-micro → e2-small ($13/mo) via GCP Console:
+- GCP Console → Compute Engine → ynai5-vm → Stop → Edit → Machine type = e2-small → Save → Start
+- After upgrade: phi3:mini goes from 1-2 tok/s → 8-15 tok/s (usable for real-time chat)
 
 ---
 
@@ -78,13 +63,21 @@ Cost: ~$13/month. Phi-3 goes from 1-2 tok/s → 8-15 tok/s (usable for real-time
 | Thing | Location |
 |-------|----------|
 | Dashboard source | `~/YNAI5_AI_CORE/dashboard/` |
-| Start all services | `cd ~/YNAI5_AI_CORE && docker compose up -d` |
+| Start Docker stack | `cd ~/YNAI5_AI_CORE && docker compose up -d` |
 | Full health check | `curl -s http://127.0.0.1:8000/status.json` |
+| API status | `curl -s http://127.0.0.1:8000/api/status` |
 | Logs | `/ynai5_runtime/logs/` |
 | YNAI5 event log | `~/YNAI5_AI_CORE/logs/ynai5logs.json` |
 | Models config | `~/YNAI5_AI_CORE/dashboard/config/models.json` |
 | Chat server | Flask on port 8001 (`chat_server.py`) |
 | Dashboard API | FastAPI on port 8000 (`main.py`) |
-| Ollama (Docker) | port 11434 |
-| Open WebUI | port 3000 (after setup) |
-| n8n | port 5678 |
+| Ollama (systemd) | port 11434 — enable with `sudo systemctl enable --now ollama` |
+| n8n | port 5678 — `http://34.45.31.188/n8n/` (via nginx) |
+
+---
+
+## Other Things Queued
+- Perplexity API key → perplexity.ai/settings/api → paste in YNAI5-KEY-INPUT.txt
+- n8n agent orchestration — wire Gemini worker + Claude runner through n8n
+- GitHub SSH key on VM → allows `git push` from VM directly
+- Health check Telegram workflow → activates on first 9AM AST scheduled run

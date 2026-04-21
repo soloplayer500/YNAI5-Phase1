@@ -1,0 +1,13 @@
+{
+  "device_name": "SOLOL",
+  "os": "Windows 11 (build 10.0.26200)",
+  "cpu": "AMD Ryzen 5 5500U with Radeon Graphics",
+  "ram_gb": 7.3,
+  "gpu": "AMD Radeon(TM) Graphics",
+  "storage_gb": 237.4,
+  "disk_free_gb": 105.8,
+  "hostname": "SoloL",
+  "platform": "Windows",
+  "timestamp": "2026-04-18T19:09:22Z",
+  "manifest_version": "1.0.0"
+}
