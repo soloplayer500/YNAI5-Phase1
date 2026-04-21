@@ -1,27 +1,11 @@
 // main.js — YNAI5 v0.3.0 ES Module Entry Point
-// Imports and initialises all modules after auth gate passes
+// Imports and initialises all modules on load
 
 import { initTheme }          from './theme.js';
 import { initMetrics, fetchStatus } from './metrics.js';
 import { initChat }           from './chat.js';
 import { getConfig }          from './secrets.js';
 import { renderAgentCards }   from './agents.js';
-
-// ── Auth Gate ──
-// crypto.subtle requires HTTPS — VM runs HTTP, so use direct comparison
-const ACCESS_CODE = 'YNAI5123';
-
-function checkAuth() {
-  if (sessionStorage.getItem('ynai5-auth') === '1') return true;
-  const pwd = prompt('YNAI5 Control Center\nAccess Code:');
-  if (!pwd) return false;
-  if (pwd.trim() === ACCESS_CODE) {
-    sessionStorage.setItem('ynai5-auth', '1');
-    return true;
-  }
-  alert('Wrong access code. Try again.');
-  return false;
-}
 
 // ── Tab System ──
 function initTabs() {
@@ -88,19 +72,12 @@ function initNav() {
 
 // ── Boot ──
 async function boot() {
-  const authed = checkAuth();
-  if (!authed) {
-    document.body.innerHTML = '<div style="display:grid;place-items:center;height:100vh;font-family:monospace;color:#666">Access denied. Reload to retry.</div>';
-    return;
-  }
-
   // Show app shell — must explicitly set display:grid (CSS sets display:none)
   const app = document.getElementById('app');
   if (app) {
     app.style.display = 'grid';
     app.removeAttribute('hidden');
   }
-  document.getElementById('auth-gate')?.remove();
 
   // Init all modules
   initTheme();
