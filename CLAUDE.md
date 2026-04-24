@@ -53,14 +53,28 @@ YNAI5-Phase1/
 │   └── system-health/                     ← Health monitoring, crash recovery, startup
 └── ryn/                                   ← RYN runtime layer (brain + RAG + local scripts)
     ├── ryn-core/                          ← Shared core scripts (rag_indexer.py)
-    ├── ryn-vm/                            ← VM-specific automation refs
+    ├── ryn-vm/                            ← VM-specific automation refs (commander.py)
     ├── ryn-local/                         ← Local-only utilities
+    ├── framework/                         ← Thinking + execution protocols (PAUL/CARL-inspired)
+    │   ├── think.md                       ← Pre-task thinking protocol
+    │   ├── build.md                       ← Execute + qualify + unify loop
+    │   ├── context.md                     ← Context window discipline
+    │   ├── skills.md                      ← Skill registry + trigger guide
+    │   └── memory.md                      ← Memory architecture guide
+    ├── runtime/                           ← Local execution scripts
+    │   ├── scheduler.py                   ← Task scheduler (due-task runner)
+    │   ├── task_router.py                 ← Route tasks → SSH|local|GitHub|Telegram
+    │   ├── heartbeat_actions.py           ← Auto-response to VM alerts
+    │   └── telegram_tasks.py             ← Telegram bot wrapper (send/receive)
+    ├── profit/                            ← Revenue strategy layer
+    │   ├── income_map.md                  ← Active + pipeline revenue streams
+    │   ├── trading_system.md             ← Edge framework + position sizing
+    │   └── monetization_ideas.md         ← Ranked opportunity backlog
     ├── brain/                             ← Runtime state (state.json, logs, RAG index)
     │   ├── state.json                     ← Model availability + system status (gitignored)
-    │   ├── memory.md                      ← Brain-specific runtime notes
-    │   ├── tasks.log                      ← Append-only task log (gitignored)
-    │   ├── communication.log             ← Inter-component log (gitignored)
-    │   ├── session_state.md              ← Current session snapshot
+    │   ├── priority_stack.md             ← Current objectives ranked by ROI × Speed
+    │   ├── last_report.md                ← Chronological event log (committed)
+    │   ├── system_summary.md             ← VM snapshot (committed)
     │   ├── index/                         ← RAG keyword index (gitignored)
     │   └── chunks/                        ← RAG text chunks (gitignored)
     └── legacy/                            ← Archived/deprecated files
@@ -188,6 +202,14 @@ _These govern how I approach ALL tasks — from simple questions to complex buil
 - `/email-check [query]` — search Gmail via MCP (brand deals, notifications, crypto alerts)
 - `/md-update [scope?]` — review key .md files for staleness, propose changes, write only with confirmation
 - `/perplexity [query] [--model sonar|sonar-pro] [--save]` — Perplexity Pro sub-agent for real-time web research with citations (add key when ready)
+
+### RYN Infrastructure Skills (2026-04-24)
+- `/trading-analysis [ticker] [timeframe?]` — full trade setup: screen → technicals → risk → entry/stop/target + prediction log
+- `/vm-repair [service?]` — SSH diagnostic + fix loop: snapshot → triage → patch → verify → report
+- `/log-audit [--quick|--full]` — VM log audit: sizes, errors, patterns, alert state → fix oversized logs
+- `/telegram-ops [command?]` — Telegram bot ops: test commander, send commands, check bot health
+- `/github-snapshot [--brain-only|--full]` — commit brain state + all changes → push to master
+- `/market-scan [--crypto|--stocks|--both]` — daily morning brief: fear/greed + movers + signal scan + bias
 
 ## Key Imports
 @context/profile.md
