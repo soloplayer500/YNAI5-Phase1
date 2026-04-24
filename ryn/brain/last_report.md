@@ -3,6 +3,35 @@ _Machine-parseable event log. Latest event at top._
 
 ---
 
+## 2026-04-24T08:36:00Z — CONTROL LOOP FINALIZED
+
+**Event:** `control-loop-finalized`
+**Triggered by:** Directive execution (Claude Code)
+
+### Changes Made
+- `commander.py v2` deployed to VM (`~/ynai5-agent/commander.py`)
+  - `build_system_state()` — unified state builder for /status + /snapshot
+  - `sh(args, timeout=10)` — all shell calls with TimeoutExpired handling
+  - `MAX_MSG=3900` — safe Telegram trim with prefix
+  - `/snapshot` — writes `snapshot.json` + local git commit to `~/YNAI5_AI_CORE` + delivers via Telegram
+- All 5 VM services confirmed `enabled` + `active` (survives reboot)
+- `alert.state` verified: 7 keys clean (dash/nginx/ram/load + 3 logsize)
+- `rclone-drive.log.1` compressed: 32MB → 1.1MB
+- RAG index rebuilt: 674 chunks, 50 files
+
+### Service States at Event
+- ynai5-heartbeat: active + enabled
+- ynai5-commander: active + enabled
+- ynai5-dashboard: active + enabled
+- ynai5-gemini: active + enabled
+- nginx: active + enabled
+
+### Metrics at Event
+- Disk: 78% (6.6G free)
+- RAM available: ~278MB | Load: 0.24, 0.30, 0.31
+
+---
+
 ## 2026-04-24T00:46:49Z — CONTROL LAYER DEPLOYED
 
 **Event:** `control-layer-v1`

@@ -1,7 +1,7 @@
 # YNAI5 System Summary
 _Human-readable snapshot. Updated after major events._
 
-Last Updated: 2026-04-24T00:46:49Z
+Last Updated: 2026-04-24T08:36:00Z
 
 ---
 
@@ -19,7 +19,7 @@ Last Updated: 2026-04-24T00:46:49Z
 | ynai5-monitor | active | Crypto price alerts |
 | nginx | active | Reverse proxy |
 | **ynai5-heartbeat** | **active** | 60s loop, RAM/disk/load/service alerts |
-| **ynai5-commander** | **active** | Telegram command handler |
+| **ynai5-commander** | **active** | Telegram command handler (v2 — hardened, timeouts, /snapshot live) |
 | Ollama | DISABLED | Insufficient RAM (1 vCPU e2-micro) |
 
 ---
@@ -92,6 +92,6 @@ Config: `/etc/logrotate.d/ynai5`
 
 ## Known Issues
 
-- rclone-drive.log was 30MB — rotated (now 0B, .1 backup retained)
-- RAM swap at 778MB — stable, monitor
-- `.log.1` backfiles ~30MB+ (compress on next rotation cycle)
+- rclone-drive.log.1 compressed: 32MB → 1.1MB ✅
+- RAM swap engaged — stable, monitor
+- All 7 alert.state keys: ok ✅
