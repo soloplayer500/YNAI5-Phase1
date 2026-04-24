@@ -1,33 +1,55 @@
 # Projects Index
-_Update this file whenever a new project is created._
 
-Last Updated: 2026-04-10 (Session 20 — MCP Integration + VM Frontend Fix)
+Last Updated: 2026-04-24 (Portfolio Lane Restructure)
 
 ---
 
-## Active Projects
+## Portfolio Lanes (top-level — read these first)
 
-| Project | Status | Priority | Folder |
-|---------|--------|----------|--------|
-| PsycheCore | 🔨 Building | High | [psychecore/](psychecore/) |
-| Crypto Monitoring | 🔨 Building | High | [crypto-monitoring/](crypto-monitoring/) |
-| Kraken Portfolio Monitor | 🔨 Building | High | [crypto-monitoring/kraken/](crypto-monitoring/kraken/) |
-| **Passive Income** | 🔨 Building | **High** | [passive-income/](passive-income/) |
-| Multi-AI Prompt Optimization | 🔨 Active Dev | Medium | [multi-ai-prompt-optimization/](multi-ai-prompt-optimization/) |
-| Social Media Automation | ⏸ Paused | Medium | [social-media-automation/](social-media-automation/) |
-| Personal AI Infrastructure | 🔄 Ongoing | Low | [personal-ai-infrastructure/](personal-ai-infrastructure/) |
-| Ralph Automation | 🔨 Building | Medium | [ralph-automation/](ralph-automation/) |
-| System Health | ✅ Active | High | [system-health/](system-health/) |
-| **Niche Research Agent** | 🔨 Building | **High** | [niche-research/](niche-research/) |
-| **YNAI5 MCPs** | 🔨 Building | **High** | [ynai5-mcps/](ynai5-mcps/) |
+The 4 lanes are how RYN organizes execution. Each lane has its own
+`project.md / mission.md / tasks.md / metrics.md / agents.md / revenue.md / logs.md`.
+
+| Lane | Status | Revenue Today | Next Milestone | Folder |
+|------|--------|---------------|----------------|--------|
+| **Crypto Alpha** | 🔨 Active | $0 (1st VIP sub pending) | Gumroad live → 1st paid sub | [crypto-alpha/](crypto-alpha/) |
+| **Client Services** | 🔨 Building | $0 | Fiverr Gig 1 uploaded | [client-services/](client-services/) |
+| **AI Content Lab** | ⏸ Paused | $0 | Kling AI unlock ($6.99/mo) | [ai-content-lab/](ai-content-lab/) |
+| **Future Ideas** | 🅿 Parking | $0 | Quarterly review (2026-07-01) | [future-ideas/](future-ideas/) |
+
+**Fastest path to first $:** client-services (Fiverr) — 3–7 days to first order.
+**Highest ceiling:** crypto-alpha (Block Syndicate VIP MRR) — $250–800 by Mo3.
+
+---
+
+## Inherited Project Folders (referenced by lanes — kept in place to preserve workflows)
+
+| Folder | Owned by Lane | Status |
+|--------|---------------|--------|
+| crypto-monitoring/ | crypto-alpha | 🔨 Active |
+| passive-income/ | crypto-alpha | 🔨 Active |
+| social-media-automation/ | ai-content-lab | ⏸ Paused |
+| niche-research/ | ai-content-lab | 🔨 Cloud agent active |
+| ynai5-mcps/ | ai-content-lab + future-ideas | 🔨 Building |
+| psychecore/ | future-ideas | 🅿 Parked |
+| multi-ai-prompt-optimization/ | future-ideas | 🅿 Parked |
+| personal-ai-infrastructure/ | future-ideas | 🅿 Parked (subsumed by ryn/) |
+| ralph-automation/ | future-ideas | 🅿 Parked (verify outputs first) |
+| system-health/ | future-ideas | 🅿 Parked (integrated into VM) |
+| vm-dashboard/ | future-ideas | 🅿 Reference only (deployed on VM) |
+
+---
 
 ## Status Key
-- 🔨 Building — actively in development
-- 🧪 Concept/Dev — concept defined, starting development
-- 📋 Strategy Phase — planning/documenting strategy
-- 🔄 Ongoing — continuous background project
+- 🔨 Active / Building — current work
+- 🅿 Parked — future-ideas lane
+- ⏸ Paused — blocked by external gate (hardware/budget)
 - ✅ Done — completed
-- ⏸ Paused — on hold
 
 ---
-_Claude updates this table when project status changes._
+
+## Rules of the Road
+1. **RYN brain (`ryn/brain/`) remains master memory.** Lanes inherit from brain but operate independently.
+2. **Anything unclear → `future-ideas/`.** Never delete, always park.
+3. **No new top-level project folders** without first checking if a lane absorbs it.
+4. **No moving inherited folders.** Workflows reference fixed paths; renaming breaks production.
+5. **Lane promotions require:** revenue model + ≤$50/≤8h test plan + kill criterion.
