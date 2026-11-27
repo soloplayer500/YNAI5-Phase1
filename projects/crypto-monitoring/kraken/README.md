@@ -54,3 +54,30 @@ COINGECKO_API_KEY=...             # Already in .env.local
 - Phase 2: CEX.IO monitor (`../cex/`)
 - Phase 3: Phantom wallet tracker (`../phantom/`)
 - Phase 4: Multi-exchange aggregator
+
+## Concurrent snapshot writes
+
+`portfolio-sync.yml` and `morning-briefing.yml` share a branch-scoped concurrency
+queue around the entire checkout → analysis → commit → push cycle. Both retain
+their daily schedules and manual triggers. `queue: max` keeps up to 100 pending
+runs rather than replacing a pending run when another is dispatched. Checkout
+resolves the current branch tip after waiting, so the second writer sees the
+first writer's predictions and alert cooldown state.
+
+`tools/push-portfolio.py` retries only the final Git operation (at most three
+push attempts). Unrelated remote changes are merged while preserving both
+commits and the monitor's unstaged cache. Changes to Kraken state, Telegram
+sessions, or overlapping output paths cause a visible failure instead of a
+text merge or overwrite. No analysis or notification step is retried. Other
+writers are not covered by this lock; actual state conflicts still require
+review. On failure the local commit survives only for the runner's lifetime;
+this helper does not publish a recovery artifact or provide durable backup.
+
+Offline regression checks (Python 3.11+, Git, PyYAML):
+
+```bash
+python -m unittest discover -s tools -p 'test_portfolio_writes.py' -v
+```
+
+These use temporary local Git remotes and assert the workflow concurrency and
+checkout contract; they do not invoke live APIs or test GitHub's queue service.
